@@ -9,7 +9,7 @@
 
 'define and consts______________________________________________________
 #define APP_NAME 				"Low Poly Editor by Pitto"
-#define APP_VERSION 			"Version 0.05"
+#define APP_VERSION 			"Version 0.06"
 #define SCR_W 					1024		
 #define SCR_H 					768
 #define MIN_SNAP_DIST			15

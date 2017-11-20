@@ -102,7 +102,7 @@ input_mode = input_add_polygon
 do
 	if MULTIKEY (SC_Escape) then exit do
 	
-	dim c as integer
+	dim as integer i, c
 	static nearest_point as temp_point_proto
 	static dist_from_nearest_point as Uinteger
 	dim scalechange as single
@@ -135,7 +135,6 @@ do
 	end if
 	
 	view_area.old_zoom = view_area.zoom
-
 	
 	if settings.is_hand_active then
 		input_mode = input_hand
@@ -202,8 +201,18 @@ do
 			redim polygons(0 to 0)
 			input_mode = input_add_polygon
 			
+		case input_erase_polygon
+			delete_all_points (polygons(Ubound(polygons)-1).first_point)
+			polygons(Ubound(polygons)-1).first_point = callocate(sizeof(point_proto))
+			'pop_polygon(polygons(), polygons(c))
+			input_mode = input_add_polygon
+			
 		case input_export_as_svg
 			export_as_svg(polygons(), "output.svg")
+			input_mode = input_add_polygon
+			
+		case input_save_as_lpe_file
+			save_as_lpe_file(polygons(), "output.lpe")
 			input_mode = input_add_polygon
 	end select
 	
@@ -218,29 +227,37 @@ do
 
 	c=0
 
-
-	for c = 0 to Ubound(polygons)-1
-		'fill each polygon
-		fill_polygon(polygons(c).first_point, CULng(polygons(c).fill_color), view_area, settings)
-		'draw the centroid of each polygon
-		if (settings.is_centroid_visible) then
-			draw_centroid(polygons(c).centroid, C_GREEN, view_area)
-		end if
-		if (settings.is_vertex_visible) then
-			draw_vertices(polygons(c).first_point, C_WHITE, view_area)
-		end if
-		'draw some debug info
-		if (settings.is_debug) then
-			draw_list_points(polygons(c).first_point, 20, 20 + c*20)
-		end if
-	next c
+	'draw the artwork, but not the current drawing polygon
+	if (Ubound(polygons)-1) > 0 then
 	
-	'highlight line from last point to mouse
-	if (polygons(0).first_point <> NULL) then
-		if (polygons(Ubound(polygons)-1).first_point->next_p <> NULL) then
-			line 	(polygons(Ubound(polygons)-1).first_point->x*view_area.zoom + view_area.x, _
-					polygons(Ubound(polygons)-1).first_point->y*view_area.zoom + view_area.y)- _
-					(User_Mouse.x, User_Mouse.y), C_WHITE
+		for c = 0 to Ubound(polygons)-2
+			'fill each polygon
+			fill_polygon(polygons(c).first_point, CULng(polygons(c).fill_color), view_area, settings)
+			'draw the centroid of each polygon
+			if (settings.is_centroid_visible) then
+				draw_centroid(polygons(c).centroid, C_GREEN, view_area)
+			end if
+			'show/hide nodes
+			if (settings.is_vertex_visible) then
+				draw_vertices(polygons(c).first_point, C_WHITE, view_area)
+			end if
+			'draw some debug info
+			if (settings.is_debug) then
+				draw_list_points(polygons(c).first_point, 20, 20 + c*20)
+			end if
+		next c
+		
+	end if
+	
+	'highlight line of the polygon the user is currently drawing
+	i = (Ubound(polygons)-1)
+	if i < 0 then i = 0
+	if (polygons(i).first_point <> NULL) then
+		draw_wireframe(polygons(i).first_point, C_RED, view_area, settings)
+		if (polygons(i).first_point->next_p <> NULL) then
+			line 	(polygons(i).first_point->x*view_area.zoom + view_area.x, _
+					polygons(i).first_point->y*view_area.zoom + view_area.y)- _
+					(User_Mouse.x, User_Mouse.y), C_WHITE,, &b1100110011001100
 		end if
 	end if
 	

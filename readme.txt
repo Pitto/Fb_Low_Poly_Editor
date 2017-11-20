@@ -16,6 +16,11 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 Also add information on how to contact you by electronic and paper mail.
 
 
+0.06 ___________________________________________________________________
+delete last path by pressing canc
+save as .lpe file
+code cleanup
+
 0.05 ___________________________________________________________________
 wireframe mode
 bitmap show/hide

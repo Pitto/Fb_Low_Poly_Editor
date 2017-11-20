@@ -39,6 +39,9 @@ declare Sub delete_all_points	(head as point_proto ptr)
 declare sub quicksort(array() as temp_point_proto, _left as integer, _right as integer )
 declare Sub draw_vertices(head as point_proto ptr, ByVal c As ULong, view_area as view_area_proto)
 declare sub reset_key_status(key as key_proto ptr)
+declare sub save_as_lpe_file(array() as polygon_proto, file_name as string)
+declare sub draw_wireframe(head as point_proto ptr, ByVal c As ULong, view_area as view_area_proto, settings as settings_proto)
+declare sub pop_polygon(array() as polygon_proto, polygon as polygon_proto)
 
 
 '_______________________________________________________________________
@@ -367,6 +370,50 @@ Sub export_as_svg (array() as polygon_proto, file_name as string)
 
 end sub
 
+Sub save_as_lpe_file(array() as polygon_proto, file_name as string)
+
+	Dim as integer i, j
+	Dim head as point_proto ptr
+	Dim ff As UByte
+	ff = FreeFile
+	Open file_name for output As #ff
+	
+	for i = 0 to Ubound(array)-1
+		dim line_output as string
+		line_output = ""
+		line_output = line_output + str(hex(array(i).fill_color shr 16 and &hFF)) + _
+					str(hex(array(i).fill_color shr 8 and &hFF)) +_
+					str(hex(array(i).fill_color and &hFF)) + "; "
+		
+		head = array(i).first_point
+		
+		redim temp_array(0 to 0) as point_proto
+
+		'ignore first one pointer values since it's only a link to data
+		while head->next_p <> NULL
+		
+			'Print #ff, str(head->x) + "," + str(head->y)
+			temp_array(Ubound(temp_array)).x = head->x
+			temp_array(Ubound(temp_array)).y = head->y
+			
+			head = head->next_p
+			
+			redim preserve temp_array(0 to Ubound(temp_array)+1) as point_proto
+			
+		wend
+		
+		for j = 0 to Ubound(temp_array) -1
+			line_output = line_output + str(temp_array(j).x) + "," + str(temp_array(j).y) + "; "
+		next j
+		
+		Print #ff, line_output
+
+	next i
+
+	Close #ff
+
+end sub
+
 Sub draw_vertices(head as point_proto ptr, ByVal c As ULong, view_area as view_area_proto)
   
 	while head <> NULL
@@ -495,12 +542,16 @@ sub keyboard_listener(	input_mode as proto_input_mode ptr, _
 					settings->is_bitmap_visible = not settings->is_bitmap_visible
 					reset_key_status(@key(i))
 				'export as SVG
-				case SC_S
+				case SC_E
 					*input_mode = input_export_as_svg
+					reset_key_status(@key(i))
+				'save in a file
+				case SC_S
+					*input_mode = input_save_as_lpe_file
 					reset_key_status(@key(i))
 				'delete all
 				case SC_DELETE
-					*input_mode = input_erase_all
+					*input_mode = input_erase_polygon
 					reset_key_status(@key(i))
 				'show / hide vertices
 				case SC_Q
@@ -762,6 +813,38 @@ sub reset_key_status (key as key_proto ptr)
 	key->is_released = false
 	key->is_down = false
 	key->old_is_down = false
+end sub
+
+Sub draw_wireframe(head as point_proto ptr, ByVal c As ULong, view_area as view_area_proto, settings as settings_proto)
+
+   redim preserve 	a(0 to 0) as point_proto
+   Dim i As Long
+
+   i = 0
+   while head <> NULL
+		if (head->next_p <> NULL) then
+			a(i).x = head->x*view_area.zoom + view_area.x
+			a(i).y = head->y*view_area.zoom + view_area.y
+			redim preserve a(0 to  Ubound(a)+1)
+		end if
+		head = head->next_p
+		i+=1
+	wend
+   
+   'join first and last vertex
+   a(Ubound(a)) = a(0)
+
+	'draw wireframe
+	For i = 0 To Ubound(a) - 1
+		line(a(i+1).x,a(i+1).y)-(a(i).x,a(i).y),c
+	next i
+
+End Sub
+
+sub pop_polygon(array() as polygon_proto, polygon as polygon_proto)
+
+'some stuff here
+	
 end sub
 
 

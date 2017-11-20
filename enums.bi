@@ -13,7 +13,8 @@ enum proto_input_mode
 	move_vertex
 	set_start
 	set_end
-	
+	input_save_as_lpe_file
 	input_erase_all
+	input_erase_polygon
 	input_export_as_svg
 end enum
