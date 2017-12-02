@@ -59,8 +59,6 @@ settings.wireframe_color = C_WHITE
 settings.is_vertex_visible = true
 settings.is_debug = false
 
-
-
 dim key(0 to 82) as key_proto
 
 dim keycodes(0 to 82) as integer = {	SC_ESCAPE, SC_1, SC_2, SC_3, SC_4, _
@@ -81,6 +79,7 @@ dim keycodes(0 to 82) as integer = {	SC_ESCAPE, SC_1, SC_2, SC_3, SC_4, _
 								SC_END,SC_DOWN,SC_PAGEDOWN,SC_INSERT,SC_DELETE,_
 								SC_F11,SC_F12 }
 dim i as integer
+
 for i = 0 to Ubound(key)-1
 	key(i).code = keycodes(i)
 	key(i).is_down = false
@@ -106,7 +105,12 @@ do
 	static nearest_point as temp_point_proto
 	static dist_from_nearest_point as Uinteger
 	dim scalechange as single
+	dim timer_diff as single
+	dim timer_begin as single
+	
 
+	timer_begin = timer
+	
 	User_Mouse.res = 	GetMouse( 	User_Mouse.x, User_Mouse.y, _
 									User_Mouse.wheel, User_Mouse.buttons,_
 									User_Mouse.clip)
@@ -142,6 +146,16 @@ do
 	
 	select case input_mode
 	
+		case input_load_lpe_file
+			'delete existing artwork before load a new one
+			for c = 0 to Ubound(polygons)-1
+				delete_all_points (polygons(c).first_point)
+			next c
+			redim polygons(0 to 0)
+		
+			load_lpe_file("output.lpe", polygons())
+			input_mode = input_add_polygon
+	
 		case input_hand
 			'####################### HAND TOOL #########################
 			if (user_mouse.is_dragging) then
@@ -159,17 +173,25 @@ do
 	
 		case input_add_polygon
 		
+			'deselect all polygons
+			for c = 0 to Ubound(polygons)-1
+				polygons(c).is_selected = false
+			next c
+		
 			add_polygon(polygons())
 			head = polygons(Ubound(polygons)-1).first_point
 			polygons(Ubound(polygons)-1).fill_color = C_GRAY
+			'set currently editing polygon as selected
+			polygons(Ubound(polygons)-1).is_selected = true
 			input_mode = input_add_point
-	
+			
 		case input_add_point
 			
 			if (user_mouse.is_lbtn_released) then
 				'snapping if mouse pointer is near to existing points
-				if Cbool(dist_from_nearest_point < MIN_SNAP_DIST/view_area.zoom) and _
-					settings.is_snap_active then
+				if 	(settings.is_snap_active) and _
+					Cbool(dist_from_nearest_point < MIN_SNAP_DIST/view_area.zoom) then
+					
 					polygons(Ubound(polygons)-1).first_point = _
 					add_point(@head, nearest_point.x, nearest_point.y)
 				else
@@ -183,6 +205,8 @@ do
 			if (user_mouse.is_rbtn_released) then
 				input_mode = input_close_polygon
 				polygons(Ubound(polygons)-1).centroid = calculate_centroid(polygons(Ubound(polygons)-1).first_point)
+				
+				polygons(Ubound(polygons)-1).bounds = calculate_bounds (polygons(Ubound(polygons)-1).first_point) 
 				polygons(Ubound(polygons)-1).fill_color = _
 				get_pixel_color	(	int(polygons(Ubound(polygons)-1).centroid.x * view_area.zoom), _
 									int(polygons(Ubound(polygons)-1).centroid.y * view_area.zoom), _
@@ -202,9 +226,17 @@ do
 			input_mode = input_add_polygon
 			
 		case input_erase_polygon
-			delete_all_points (polygons(Ubound(polygons)-1).first_point)
-			polygons(Ubound(polygons)-1).first_point = callocate(sizeof(point_proto))
-			'pop_polygon(polygons(), polygons(c))
+			'erase selected polygons
+			for c = 0 to Ubound(polygons)-1
+				if polygons(c).is_selected then
+					delete_all_points (polygons(c).first_point)
+					polygons(c).first_point = callocate(sizeof(point_proto))
+					polygons(c).centroid.x = 0
+					polygons(c).centroid.y = 0
+				end if
+				
+			next c
+		
 			input_mode = input_add_polygon
 			
 		case input_export_as_svg
@@ -214,8 +246,45 @@ do
 		case input_save_as_lpe_file
 			save_as_lpe_file(polygons(), "output.lpe")
 			input_mode = input_add_polygon
+			
+		case input_selection
+			if user_mouse.is_lbtn_released then
+				user_mouse.bounding_x1 = user_mouse.drag_x1
+				user_mouse.bounding_y1 = user_mouse.drag_y1 
+				user_mouse.bounding_x2 = user_mouse.drag_x2
+				user_mouse.bounding_y2 = user_mouse.drag_y2
+				if user_mouse.bounding_x1 > user_mouse.bounding_x2 then
+					swap user_mouse.bounding_x1, user_mouse.bounding_x2
+				end if
+				if user_mouse.bounding_y1 > user_mouse.bounding_y2 then
+					swap user_mouse.bounding_y1, user_mouse.bounding_y2
+				end if
+				for c = 0 to Ubound(polygons)-1
+					if 	polygons(c).centroid.x > user_mouse.bounding_x1 and _
+						polygons(c).centroid.y > user_mouse.bounding_y1 and _
+						polygons(c).centroid.x < user_mouse.bounding_x2 and _
+						polygons(c).centroid.y < user_mouse.bounding_y2 then	
+					
+						polygons(c).is_selected = true
+					else
+						polygons(c).is_selected = false
+					end if
+					
+				next c
+			end if
+			user_mouse.is_lbtn_released = false
+			
+			case input_create_random_polygons
+			
+				create_random_polygons	(polygons(),RANDOM_POLYGONS_QTY, _
+										MAX_POLYGONS_NODES, SCR_W, _
+										SCR_H, view_area, wallp_img_resized)
+				input_mode = input_add_polygon
 	end select
 	
+	timer_diff = timer - timer_begin
+	
+	timer_begin = timer
 	screenlock ' Lock the screen
 	screenset Workpage, Workpage xor 1 ' Swap work pages.
 
@@ -233,9 +302,22 @@ do
 		for c = 0 to Ubound(polygons)-2
 			'fill each polygon
 			fill_polygon(polygons(c).first_point, CULng(polygons(c).fill_color), view_area, settings)
+			
+			if (settings.is_wireframe_visible) then
+				draw_wireframe(polygons(c).first_point, C_WHITE, view_area, settings)
+			end if
+			
+			'line 	(polygons(c).bounds.x1, polygons(c).bounds.y1) - _
+			'		(polygons(c).bounds.x2, polygons(c).bounds.y2), C_WHITE, B
+			
 			'draw the centroid of each polygon
 			if (settings.is_centroid_visible) then
 				draw_centroid(polygons(c).centroid, C_GREEN, view_area)
+			end if
+			'highligt selected polygon
+			if polygons(c).is_selected then
+				draw_centroid(polygons(c).centroid, C_RED, view_area)
+				draw_wireframe(polygons(c).first_point, C_GREEN, view_area, settings)
 			end if
 			'show/hide nodes
 			if (settings.is_vertex_visible) then
@@ -249,40 +331,62 @@ do
 		
 	end if
 	
-	'highlight line of the polygon the user is currently drawing
-	i = (Ubound(polygons)-1)
-	if i < 0 then i = 0
-	if (polygons(i).first_point <> NULL) then
-		draw_wireframe(polygons(i).first_point, C_RED, view_area, settings)
-		if (polygons(i).first_point->next_p <> NULL) then
-			line 	(polygons(i).first_point->x*view_area.zoom + view_area.x, _
-					polygons(i).first_point->y*view_area.zoom + view_area.y)- _
-					(User_Mouse.x, User_Mouse.y), C_WHITE,, &b1100110011001100
-		end if
-	end if
+	select case input_mode
 	
-	'highlight nearest point to mouse, skip if Left or right shift key is down
-	if 	Cbool(dist_from_nearest_point < MIN_SNAP_DIST / view_area.zoom) and _
-		settings.is_snap_active then
-		circle (	nearest_point.x*view_area.zoom + view_area.x, _
-					nearest_point.y*view_area.zoom + view_area.y), 4, C_GREEN, ,,,F
-		line (user_mouse.x-5, user_mouse.y-5)-STEP(10,10), C_DARK_GREEN, B
-		line (user_mouse.x-6, user_mouse.y-6)-STEP(12,12), C_GREEN, B
-	end if
+		case input_add_point
+			'highlight line of the polygon the user is currently drawing
+			i = (Ubound(polygons)-1)
+			if i < 0 then i = 0
+			if (polygons(i).first_point <> NULL) then
+				draw_wireframe(polygons(i).first_point, C_RED, view_area, settings)
+				if (polygons(i).first_point->next_p <> NULL) then
+					line 	(polygons(i).first_point->x*view_area.zoom + view_area.x, _
+							polygons(i).first_point->y*view_area.zoom + view_area.y)- _
+							(User_Mouse.x, User_Mouse.y), C_WHITE,, &b1100110011001100
+					line 	(polygons(i).first_point->x*view_area.zoom + view_area.x, _
+							polygons(i).first_point->y*view_area.zoom + view_area.y)- _
+							(User_Mouse.x, User_Mouse.y), C_BLACK,, &b0011001100110011
+				end if
+			end if
+			
+			'highlight nearest point to mouse, skip if Left or right shift key is down
+			if 	Cbool(dist_from_nearest_point < MIN_SNAP_DIST / view_area.zoom) and _
+				settings.is_snap_active then
+				circle (	nearest_point.x*view_area.zoom + view_area.x, _
+							nearest_point.y*view_area.zoom + view_area.y), 4, C_GREEN, ,,,F
+				line (user_mouse.x-5, user_mouse.y-5)-STEP(10,10), C_DARK_GREEN, B
+				line (user_mouse.x-6, user_mouse.y-6)-STEP(12,12), C_GREEN, B
+			end if
 
-	'mouse graphical cross pointer
-	if (user_mouse.is_lbtn_pressed) then
-		line (user_mouse.x-5, user_mouse.y-5)-step(10, 10), C_ORANGE, BF
-	end if
-	
-	line (user_mouse.x-5, user_mouse.y-1)-step(10, 2), C_BLACK, BF
-	line (user_mouse.x-1, user_mouse.y-5)-step(2, 10), C_BLACK, BF
+			'mouse graphical cross pointer
+			if (user_mouse.is_lbtn_pressed) then
+				line (user_mouse.x-5, user_mouse.y-5)-step(10, 10), C_ORANGE, BF
+			end if
+			
+			line (user_mouse.x-5, user_mouse.y-1)-step(10, 2), C_BLACK, BF
+			line (user_mouse.x-1, user_mouse.y-5)-step(2, 10), C_BLACK, BF
+				
+			line (user_mouse.x-10, user_mouse.y)-(user_mouse.x+10, user_mouse.y)
+			line (user_mouse.x, user_mouse.y-10)-(user_mouse.x, user_mouse.y+10)
+			
+		case input_selection
+			line (user_mouse.x-5, user_mouse.y-1)-step(10, 2), C_BLUE, BF
+			line (user_mouse.x-1, user_mouse.y-5)-step(2, 10), C_BLUE, BF
+				
+			line (user_mouse.x-10, user_mouse.y)-(user_mouse.x+10, user_mouse.y)
+			line (user_mouse.x, user_mouse.y-10)-(user_mouse.x, user_mouse.y+10)
 		
-	line (user_mouse.x-10, user_mouse.y)-(user_mouse.x+10, user_mouse.y)
-	line (user_mouse.x, user_mouse.y-10)-(user_mouse.x, user_mouse.y+10)
-	
-	draw string (20, SCR_H - 40), "absolute x " + str(user_mouse.abs_x) + ", y " + str(user_mouse.abs_y)
-	draw string (20, SCR_H - 30), "mouse x " + str(user_mouse.x) + ", y " + str(user_mouse.y)
+		
+			if user_mouse.is_dragging then
+				line 	(user_mouse.drag_x1*view_area.zoom + view_area.x, user_mouse.drag_y1*view_area.zoom + view_area.y) - _
+						(user_mouse.drag_x2*view_area.zoom + view_area.x, user_mouse.drag_y2*view_area.zoom + view_area.y), ,B
+			end if
+	end select
+
+	'draw string (20, SCR_H - 60), "bounding 1 " + str(user_mouse.bounding_x1) + ", " + str(user_mouse.bounding_y1)
+	'draw string (20, SCR_H - 50), "bounding 2 " + str(user_mouse.bounding_x2) + ", " + str(user_mouse.bounding_y2)
+	draw string (20, SCR_H - 30), "absolute x " + str(user_mouse.abs_x) + ", y " + str(user_mouse.abs_y)
+	'draw string (20, SCR_H - 30), "mouse x " + str(user_mouse.x) + ", y " + str(user_mouse.y)
 	draw string (20, SCR_H - 20), APP_NAME + " " + APP_VERSION, C_BLACK
 	draw string (20, SCR_H - 21), APP_NAME + " " + APP_VERSION, C_WHITE
 	

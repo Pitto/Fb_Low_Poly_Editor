@@ -5,6 +5,7 @@ enum proto_input_mode
 	input_add_polygon = 1
 	input_add_point = 2
 	input_close_polygon = 3
+	input_selection
 	input_hand
 	add_vertex
 	del_vertex
@@ -17,4 +18,6 @@ enum proto_input_mode
 	input_erase_all
 	input_erase_polygon
 	input_export_as_svg
+	input_load_lpe_file
+	input_create_random_polygons
 end enum

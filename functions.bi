@@ -16,10 +16,15 @@ declare function pDistance		(x as single, y as single, _
 						x2 as single, y2 as single,_
 						view_area as view_area_proto) as temp_point_proto
 
+'converts a string of RGB values in only one variable containing
+'Unsigned Lonv values (32 bit platform independent)						
+declare function string_to_rgb (rgb_input as string) as ULong
+
 'Bmp load by noop
 declare function Load_bmp( ByRef filename As Const String ) As Any Ptr
 
 'subs declarations______________________________________________________
+
 declare sub add_polygon			(array() as polygon_proto)
 declare sub draw_centroid		(centroid as point_proto, stroke_color as Ulong, view_area as view_area_proto)
 declare sub draw_list_points	(head as point_proto ptr, x as integer, y as integer)
@@ -42,7 +47,14 @@ declare sub reset_key_status(key as key_proto ptr)
 declare sub save_as_lpe_file(array() as polygon_proto, file_name as string)
 declare sub draw_wireframe(head as point_proto ptr, ByVal c As ULong, view_area as view_area_proto, settings as settings_proto)
 declare sub pop_polygon(array() as polygon_proto, polygon as polygon_proto)
-
+declare sub load_lpe_file(filename as string, polygons() as polygon_proto)
+declare sub create_random_polygons	(polygons() as polygon_proto,_
+									max_polygons as integer, _
+									max_nodes as integer, _
+									artwork_max_w as integer, _
+									artwork_max_h as integer,_
+									view_area as view_area_proto, _
+									img_name as any ptr)
 
 '_______________________________________________________________________
 
@@ -340,15 +352,20 @@ Sub export_as_svg (array() as polygon_proto, file_name as string)
 	
 	Print #ff, "<?xml version='1.0' standalone='no'?>"
 	Print #ff, "<!DOCTYPE svg PUBLIC '-//W3C//DTD SVG 1.1//EN' 'http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd'>"
-	Print #ff, "<svg width='800px' height='600px' version='1.1' xmlns='http://www.w3.org/2000/svg'>"
+	Print #ff, "<svg  version='1.1' xmlns='http://www.w3.org/2000/svg'>"
 	Print #ff, "<desc>" + APP_NAME + APP_VERSION + " - Export file</desc>"
 
 	for i = 0 to Ubound(array)-1
-	
-		Print #ff, "<polygon fill='#" + _
-					hex(array(i).fill_color shr 16 and &hFF) + _
-					hex(array(i).fill_color shr 8 and &hFF) +_
-					hex(array(i).fill_color and &hFF) + "'"
+		dim as Ubyte r, g, b
+		
+		r = array(i).fill_color shr 16 and &hFF
+		g = array(i).fill_color shr 8 and &hFF
+		b = array(i).fill_color and &hFF
+
+		Print #ff, "<polygon fill='rgb(" + str(r) + "," + str(g) + "," + str(b) + ")' "
+					'hex(array(i).fill_color shr 16 and &hFF) + _
+					'hex(array(i).fill_color shr 8 and &hFF) +_
+					'hex(array(i).fill_color and &hFF) + "'"
 		Print #ff, "points='"
 		
 		head = array(i).first_point
@@ -373,6 +390,8 @@ end sub
 Sub save_as_lpe_file(array() as polygon_proto, file_name as string)
 
 	Dim as integer i, j
+	dim as Ubyte r, g, b
+	
 	Dim head as point_proto ptr
 	Dim ff As UByte
 	ff = FreeFile
@@ -380,10 +399,16 @@ Sub save_as_lpe_file(array() as polygon_proto, file_name as string)
 	
 	for i = 0 to Ubound(array)-1
 		dim line_output as string
-		line_output = ""
-		line_output = line_output + str(hex(array(i).fill_color shr 16 and &hFF)) + _
-					str(hex(array(i).fill_color shr 8 and &hFF)) +_
-					str(hex(array(i).fill_color and &hFF)) + "; "
+		
+		r = array(i).fill_color shr 16 'and &hFF
+		g = array(i).fill_color shr 8 and &hFF
+		b = array(i).fill_color and &hFF
+	
+		'save RGB values in
+		'line_output = line_output + str(hex(array(i).fill_color shr 16 and &hFF)) + _
+		line_output = str(r) + "," + str(g) + "," + str(b) + "; "
+					'str(hex(array(i).fill_color shr 8 and &hFF)) +_
+					'str(hex(array(i).fill_color and &hFF)) + "; "
 		
 		head = array(i).first_point
 		
@@ -425,7 +450,31 @@ Sub draw_vertices(head as point_proto ptr, ByVal c As ULong, view_area as view_a
 	wend
 End Sub
 
+function calculate_bounds (head as point_proto ptr) as segment_proto
 
+	dim bounds as segment_proto
+	dim i as integer
+	
+	bounds.x1 = 0
+	bounds.x1 = 0
+	bounds.y1 = 0
+	bounds.y1 = 0
+	
+	i = 0
+	while head <> NULL
+		if (head->next_p <> NULL) then
+			if head->x < bounds.x1 then bounds.x1 = head->x 
+			if head->y < bounds.y1 then bounds.y1 = head->y
+			if head->x > bounds.x2 then bounds.x2 = head->x 
+			if head->y > bounds.y2 then bounds.y2 = head->y 
+		end if
+		head = head->next_p
+		i+=1
+	wend
+	
+	return bounds
+
+end function
 
 Sub fill_polygon(head as point_proto ptr, ByVal c As ULong, view_area as view_area_proto, settings as settings_proto)
    'translation of a c snippet by Angad
@@ -495,12 +544,12 @@ Sub fill_polygon(head as point_proto ptr, ByVal c As ULong, view_area as view_ar
 
    Next y
    
-           'draw wireframe
-      if (settings.is_wireframe_visible) then
-		For i = 0 To Ubound(a, 1) - 1
-			line(a(i+1, 0),a(i+1, 1))-(a(i, 0),a(i, 1)),C_WHITE
-		next i
-		end if
+           ''draw wireframe
+      'if (settings.is_wireframe_visible) then
+		'For i = 0 To Ubound(a, 1) - 1
+			'line(a(i+1, 0),a(i+1, 1))-(a(i, 0),a(i, 1)),C_WHITE
+		'next i
+		'end if
 End Sub
 
 sub keyboard_listener(	input_mode as proto_input_mode ptr, _
@@ -557,6 +606,26 @@ sub keyboard_listener(	input_mode as proto_input_mode ptr, _
 				case SC_Q
 					settings->is_vertex_visible = not settings->is_vertex_visible
 					reset_key_status(@key(i))
+				'selection mode
+				case SC_V
+					*input_mode = input_selection
+					reset_key_status(@key(i))
+				'pen tool
+				case SC_P
+					if (*input_mode <> input_add_polygon) then
+						*input_mode = input_add_polygon
+						reset_key_status(@key(i))
+					end if
+				case SC_L
+					if (multikey(SC_CONTROL)) then
+						*input_mode = input_load_lpe_file
+						reset_key_status(@key(i))
+					end if
+				case SC_R
+					if (multikey(SC_CONTROL)) then
+						*input_mode = input_create_random_polygons
+						reset_key_status(@key(i))
+					end if
 			end select
 		end if
 	
@@ -605,6 +674,7 @@ sub mouse_listener(user_mouse as mouse_proto ptr, view_area as view_area_proto p
 	static old_is_rbtn_pressed as boolean = false
 	static as integer old_x, old_y
 	static store_xy as boolean = false
+	static begin_store_xy as boolean = false
 	dim as integer scalechange
 	
 	user_mouse->abs_x = int(user_mouse->x / view_area->zoom + (-view_area->x / view_area->zoom))
@@ -612,19 +682,18 @@ sub mouse_listener(user_mouse as mouse_proto ptr, view_area as view_area_proto p
 	
 	if User_Mouse->old_wheel < User_Mouse->wheel and view_area->zoom < 4 then
       view_area->zoom *= 2.0f
-      'view_area->x -= Int(user_mouse->abs_x)\int(view_area->zoom)
-      'view_area->y -= Int(user_mouse->abs_y)\int(view_area->zoom)
    end if
    if User_Mouse->old_wheel > User_Mouse->wheel and view_area->zoom > 0.25 then
       view_area->zoom *= 0.5f
-      'view_area->x = Int(user_mouse->abs_x)\2
-      'view_area->y = Int(user_mouse->abs_y)\2
    end if
    
 
 	'recognize if the left button has been pressed
 	if User_Mouse->buttons and 1 then
 		User_Mouse->is_lbtn_pressed = true
+		
+		user_mouse->drag_x2 = user_mouse->abs_x
+		user_mouse->drag_y2 = user_mouse->abs_y
 	else
 		User_Mouse->is_lbtn_pressed = false
 	end if
@@ -644,7 +713,9 @@ sub mouse_listener(user_mouse as mouse_proto ptr, view_area as view_area_proto p
 	if store_xy then
 		user_mouse->old_x = user_mouse->x
 		user_mouse->old_y = user_mouse->y
+
 		store_xy = false
+		begin_store_xy = false
 	end if
 	
 	'recognize if the left button has been released
@@ -679,6 +750,14 @@ sub mouse_listener(user_mouse as mouse_proto ptr, view_area as view_area_proto p
 	else
 		user_mouse->is_dragging = false
 	end if
+	
+	if user_mouse->is_dragging and begin_store_xy = false then
+		begin_store_xy = true
+		user_mouse->drag_x1 = user_mouse->abs_x
+		user_mouse->drag_y1 = user_mouse->abs_y
+	end if
+	
+	
 	   'store the old wheel state
 	User_Mouse->old_wheel = User_Mouse->wheel
 	'store the old state of left button
@@ -789,7 +868,7 @@ function pDistance		(x as single, y as single, _
 		nearest_point.y = y1 + param * D
 	end if
 	
-	'snapping to the edge of the segment
+	'snapping to the end of the segment
 	if dist(x1, y1, x, y) < MIN_EDGE_SNAP_DIST / view_area.zoom then
 		nearest_point.x = x1
 		nearest_point.y = y1
@@ -798,7 +877,7 @@ function pDistance		(x as single, y as single, _
 		nearest_point.x = x2
 		nearest_point.y = y2
 		nearest_point.distance = dist (x2, y2,x, y)
-	'snapping along the segment
+	'snapping along the edge the segment
 	else
 		nearest_point.distance = dist (x, y,nearest_point.x, nearest_point.y)
 	end if
@@ -848,3 +927,159 @@ sub pop_polygon(array() as polygon_proto, polygon as polygon_proto)
 end sub
 
 
+
+sub load_lpe_file(filename as string, polygons() as polygon_proto)
+
+	'modified version of a snippet by MrSwiss
+	'Loading a CSV file into an array
+	'https://www.freebasic.net/forum/viewtopic.php?t=25693
+	
+	dim as string textline, token, tokens()
+	dim as integer pos1 = 1, pos2 , filenum, res, j
+
+	filenum = Freefile
+	res 	= Open (filename, For Input, As #filenum)
+
+	j = 0
+
+	While (Not Eof(filenum))
+		
+		Line Input #filenum, textline ' Get one whole text line
+		j +=1
+		redim tokens(0 to 0)
+		
+		do
+			' next semicolor position
+			pos2 = instr(pos1, textline, ";")
+			' if new semicolon found,
+			' take the substring between the last semicolon and it
+			if pos2 > 0 Then
+				token = mid(textline, pos1, pos2 - pos1)    ' calc. len (new)
+			Else
+				token = Mid(textline, pos1)
+			end if
+		   
+			' add the token to the end of the array (slightly inefficient)
+			redim preserve tokens(0 to ubound(tokens) + 1)
+			tokens(ubound(tokens)) = token
+		   
+			pos1 = pos2 + 1 ' added + 1
+		loop until pos2 = 0
+		
+		'skip if there is an empty line
+		if Ubound(tokens) > 2 then
+			add_polygon(polygons())
+			
+			dim head as point_proto ptr
+			head = polygons(Ubound(polygons)-1).first_point
+			
+			'fill main data of polygon
+			polygons(Ubound(polygons)-1).fill_color = string_to_rgb(tokens(1))
+			polygons(Ubound(polygons)-1).is_selected = false
+
+			'skip first point since it contains only color and centroid data
+			for i as integer = ubound(tokens)-1 to 2 step -1
+				dim as string x, y
+				dim as integer comma_pos
+				'print tokens(i)
+				comma_pos = instr(tokens(i), ",")
+				if (comma_pos) then
+					x = mid(tokens(i), 2, comma_pos -2)
+					y = mid(tokens(i), comma_pos + 1, len(tokens(i))-(comma_pos-1))
+				end if
+				
+				polygons(Ubound(polygons)-1).first_point = _
+						add_point(@head, cast(single, x), cast(single,y))
+				
+			next i
+			polygons(Ubound(polygons)-1).centroid = _
+			calculate_centroid(polygons(Ubound(polygons)-1).first_point)
+		end if
+	Wend
+
+	Close #filenum
+
+end sub
+
+sub create_random_polygons	(polygons() as polygon_proto,_
+							max_polygons as integer, _
+							max_nodes as integer, artwork_max_w as integer, _
+							artwork_max_h as integer,_
+							view_area as view_area_proto,_
+							img_name as any ptr)
+
+	dim head as point_proto ptr
+	
+	for i as integer = 0 to max_polygons
+	
+		add_polygon(polygons())
+		head = polygons(Ubound(polygons)-1).first_point
+		polygons(Ubound(polygons)-1).fill_color = C_GRAY
+		polygons(Ubound(polygons)-1).is_selected = false
+		
+		'at least 3 nodes
+		dim random_node_qty as integer
+		random_node_qty = int(rnd * max_nodes)
+		if random_node_qty < 4 then random_node_qty = 4
+		
+		'random place
+		dim as integer x, y
+		dim as single rotation
+		
+		x = rnd*artwork_max_w
+		y = rnd*artwork_max_h
+		rotation = 0.0f
+		
+		for j as integer = 0 to random_node_qty
+			rotation += (_2PI / random_node_qty)
+			
+			dim as integer x1, y1
+			
+			x1 = x + cos(_abtp(x, y, x + cos(rotation)*10, y + -sin(rotation)*10))*10
+			y1 = y + -sin(_abtp(x, y, x + cos(rotation)*10, y + -sin(rotation)*10))*10
+			
+			polygons(Ubound(polygons)-1).first_point = _
+					add_point(@head, x1, y1)
+		
+		next j
+		
+		polygons(Ubound(polygons)-1).centroid = calculate_centroid(polygons(Ubound(polygons)-1).first_point)
+				polygons(Ubound(polygons)-1).fill_color = _
+				get_pixel_color	(	int(polygons(Ubound(polygons)-1).centroid.x * view_area.zoom), _
+									int(polygons(Ubound(polygons)-1).centroid.y * view_area.zoom), _
+									img_name)
+		
+	next i
+	
+	
+
+end sub
+
+function string_to_rgb (rgb_input as string) as ULong
+
+redim tokens(0 to 0) as string
+dim as integer pos1 = 1, pos2
+dim as string token
+	
+	do
+		' next comma position
+		pos2 = instr(pos1, rgb_input, ",")
+		' if new comma found,
+		' take the substring between the last comma and it
+		if pos2 > 0 Then
+			token = mid(rgb_input, pos1, pos2 - pos1)    ' calc. len (new)
+		Else
+			token = Mid(rgb_input, pos1)
+		end if
+	   
+		' add the token to the end of the array
+		redim preserve tokens(0 to ubound(tokens) + 1)
+		tokens(ubound(tokens)) = token
+	   
+		pos1 = pos2 + 1 ' added + 1
+		
+	loop until pos2 = 0
+	
+	return (rgb(tokens(1), tokens(2), tokens(3)))
+
+end function

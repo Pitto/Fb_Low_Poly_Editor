@@ -20,6 +20,8 @@ type polygon_proto
 	centroid		as point_proto
 	fill_color		as Ulong
 	stroke_color	as Ulong
+	is_selected		as boolean
+	bounds			as segment_proto
 end type
 
 type view_area_proto
@@ -45,7 +47,9 @@ end type
 Type mouse_proto
     As Integer 		res, x, y, old_x, old_y, wheel, clip, _
 					old_wheel, diff_wheel, abs_x, abs_y
-    as single 		oppo_x, oppo_y, old_oppo_x, old_oppo_y
+    as single 		oppo_x, oppo_y, old_oppo_x, old_oppo_y, _
+					drag_x1, drag_y1, drag_x2, drag_y2, _
+					bounding_x1, bounding_y1, bounding_x2, bounding_y2
     as boolean is_dragging
     as boolean is_lbtn_released
     as boolean is_lbtn_pressed

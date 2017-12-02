@@ -15,6 +15,12 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 Also add information on how to contact you by electronic and paper mail.
 
+0.07 ___________________________________________________________________
+delete selected paths
+code cleanup
+load .lpe files
+fixed wrong colors in both .lpe e .svg files
+
 
 0.06 ___________________________________________________________________
 delete last path by pressing canc

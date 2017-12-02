@@ -9,11 +9,13 @@
 
 'define and consts______________________________________________________
 #define APP_NAME 				"Low Poly Editor by Pitto"
-#define APP_VERSION 			"Version 0.06"
-#define SCR_W 					1024		
-#define SCR_H 					768
+#define APP_VERSION 			"Version 0.07"
+#define SCR_W 					800		
+#define SCR_H 					600
 #define MIN_SNAP_DIST			15
 #define MIN_EDGE_SNAP_DIST		20
+#define RANDOM_POLYGONS_QTY		200
+#define MAX_POLYGONS_NODES		10
 
 
 'colors
@@ -32,3 +34,6 @@
 #define C_DARK_RED 		&h7F0000
 #define C_DARK_GREEN	&h005500
 #define C_DARK_BLUE		&h00007F
+
+const as double _PI = 4*atn(1)
+const as double _2PI = 2*_PI
