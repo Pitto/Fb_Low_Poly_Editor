@@ -38,6 +38,7 @@ workpage = 0
 Dim user_mouse 				as mouse_proto
 dim view_area				as view_area_proto
 Dim input_mode				as proto_input_mode
+dim console_message			as proto_console_message
 dim wallp_image				as any ptr
 
 user_mouse.is_dragging = false
@@ -49,6 +50,7 @@ view_area.y = 0
 view_area.zoom = 1.0f
 view_area.old_zoom = view_area.zoom
 
+
 dim settings as settings_proto
 settings.is_snap_active = true
 settings.is_hand_active = false
@@ -58,6 +60,7 @@ settings.is_wireframe_visible = true
 settings.wireframe_color = C_WHITE
 settings.is_vertex_visible = true
 settings.is_debug = false
+settings.is_help_visible = false
 
 dim key(0 to 82) as key_proto
 
@@ -80,6 +83,7 @@ dim keycodes(0 to 82) as integer = {	SC_ESCAPE, SC_1, SC_2, SC_3, SC_4, _
 								SC_F11,SC_F12 }
 dim i as integer
 
+'setting up initial values of keys
 for i = 0 to Ubound(key)-1
 	key(i).code = keycodes(i)
 	key(i).is_down = false
@@ -87,16 +91,42 @@ for i = 0 to Ubound(key)-1
 	key(i).is_released= false
 next i
 
+dim console_messages_strings (0 to 31) as string = { _
+											"Undefined error", _
+											"TOOL: Pen", _
+											"TOOL: Selection", _
+											"TOOL: Direct Selection", _
+											"TOOL: Hand", _
+											"Point Added", _
+											"Polygon Closed", _
+											"Polygon/s deleted", _
+											"FILE SAVED", _
+											"FILE EXPORTED", _
+											"Wireframe: ON", _
+											"Wireframe: OFF", _
+											"Centroids: ON", _
+											"Centroids: OFF", _
+											"Bitmap:    ON", _
+											"Bitmap:    OFF", _
+											"Points:	ON", _
+											"Points:    OFF" }
+											
+dim on_screen_help() as string
+load_whole_txt_file	("data/instructions.txt", on_screen_help())
+
 screenres (SCR_W, SCR_H, 24)
 SetMouse SCR_W\2, SCR_H\2, 0
 
 dim as FB.Image ptr wallp_img = Load_bmp( "img/test.bmp" )
+dim as FB.Image ptr rasterized_artwork = Load_bmp( "img/test.bmp" )
 dim as fb.image ptr wallp_img_resized = ImageScale	(wallp_img,_
 													wallp_img->width*view_area.zoom, _
 													wallp_img->height*view_area.zoom)
 
+
 dim head as point_proto ptr
 input_mode = input_add_polygon
+console_message = cm_PEN_Tool
 
 do
 	if MULTIKEY (SC_Escape) then exit do
@@ -142,6 +172,7 @@ do
 	
 	if settings.is_hand_active then
 		input_mode = input_hand
+		console_message = cm_TOOL_Hand
 	end if
 	
 	select case input_mode
@@ -184,6 +215,7 @@ do
 			'set currently editing polygon as selected
 			polygons(Ubound(polygons)-1).is_selected = true
 			input_mode = input_add_point
+			console_message = cm_PEN_Tool
 			
 		case input_add_point
 			
@@ -198,25 +230,27 @@ do
 					polygons(Ubound(polygons)-1).first_point = _
 					add_point(@head, user_mouse.abs_x, user_mouse.abs_y)
 				end if
-
 				user_mouse.is_lbtn_released = false
+				console_message = cm_Point_Added
 			end if
 			
+			'close polygon clicking on mouse's right button
 			if (user_mouse.is_rbtn_released) then
 				input_mode = input_close_polygon
 				polygons(Ubound(polygons)-1).centroid = calculate_centroid(polygons(Ubound(polygons)-1).first_point)
 				
-				polygons(Ubound(polygons)-1).bounds = calculate_bounds (polygons(Ubound(polygons)-1).first_point) 
+				polygons(Ubound(polygons)-1).bounds = calculate_bounds (polygons(Ubound(polygons)-1).first_point, polygons(Ubound(polygons)-1).centroid) 
 				polygons(Ubound(polygons)-1).fill_color = _
-				get_pixel_color	(	int(polygons(Ubound(polygons)-1).centroid.x * view_area.zoom), _
-									int(polygons(Ubound(polygons)-1).centroid.y * view_area.zoom), _
-									wallp_img_resized)
+				get_average_color (	polygons(Ubound(polygons)-1).first_point, _
+									view_area, wallp_img)
 				user_mouse.is_rbtn_released = false
+				console_message = cm_Polygon_Closed
 			end if
 		
 		case input_close_polygon
 		
 			input_mode = input_add_polygon
+			console_message = cm_Polygon_Closed
 			
 		case input_erase_all
 			for c = 0 to Ubound(polygons)-1
@@ -224,6 +258,7 @@ do
 			next c
 			redim polygons(0 to 0)
 			input_mode = input_add_polygon
+			console_message = cm_Polygon_s_deleted
 			
 		case input_erase_polygon
 			'erase selected polygons
@@ -238,14 +273,17 @@ do
 			next c
 		
 			input_mode = input_add_polygon
+			console_message = cm_Polygon_s_deleted
 			
 		case input_export_as_svg
 			export_as_svg(polygons(), "output.svg")
 			input_mode = input_add_polygon
+			console_message = cm_FILE_EXPORTED
 			
 		case input_save_as_lpe_file
 			save_as_lpe_file(polygons(), "output.lpe")
 			input_mode = input_add_polygon
+			console_message = cm_FILE_SAVED
 			
 		case input_selection
 			if user_mouse.is_lbtn_released then
@@ -278,7 +316,7 @@ do
 			
 				create_random_polygons	(polygons(),RANDOM_POLYGONS_QTY, _
 										MAX_POLYGONS_NODES, SCR_W, _
-										SCR_H, view_area, wallp_img_resized)
+										SCR_H, view_area, wallp_img)
 				input_mode = input_add_polygon
 	end select
 	
@@ -300,16 +338,24 @@ do
 	if (Ubound(polygons)-1) > 0 then
 	
 		for c = 0 to Ubound(polygons)-2
-			'fill each polygon
-			fill_polygon(polygons(c).first_point, CULng(polygons(c).fill_color), view_area, settings)
+			'fill each polygon only if into current view area
+			
+			if (is_overlap(	polygons(c).bounds.x1, polygons(c).bounds.y1, _
+							polygons(c).bounds.x2, polygons(c).bounds.y2,_
+							-view_area.x/ view_area.zoom, -view_area.y/ view_area.zoom, _
+							-view_area.x/ view_area.zoom + SCR_W/view_area.zoom, _
+							-view_area.y/ view_area.zoom + SCR_H/view_area.zoom)) then													'0, 0, 300,300)) then
+			
+				fill_polygon   (polygons(c).first_point, _
+								CULng(polygons(c).fill_color), _
+								view_area, settings)
+			
+			end if
 			
 			if (settings.is_wireframe_visible) then
 				draw_wireframe(polygons(c).first_point, C_WHITE, view_area, settings)
 			end if
-			
-			'line 	(polygons(c).bounds.x1, polygons(c).bounds.y1) - _
-			'		(polygons(c).bounds.x2, polygons(c).bounds.y2), C_WHITE, B
-			
+
 			'draw the centroid of each polygon
 			if (settings.is_centroid_visible) then
 				draw_centroid(polygons(c).centroid, C_GREEN, view_area)
@@ -318,6 +364,7 @@ do
 			if polygons(c).is_selected then
 				draw_centroid(polygons(c).centroid, C_RED, view_area)
 				draw_wireframe(polygons(c).first_point, C_GREEN, view_area, settings)
+				draw_bounds(polygons(c).bounds, view_area)
 			end if
 			'show/hide nodes
 			if (settings.is_vertex_visible) then
@@ -382,9 +429,14 @@ do
 						(user_mouse.drag_x2*view_area.zoom + view_area.x, user_mouse.drag_y2*view_area.zoom + view_area.y), ,B
 			end if
 	end select
-
-	'draw string (20, SCR_H - 60), "bounding 1 " + str(user_mouse.bounding_x1) + ", " + str(user_mouse.bounding_y1)
-	'draw string (20, SCR_H - 50), "bounding 2 " + str(user_mouse.bounding_x2) + ", " + str(user_mouse.bounding_y2)
+	
+	
+															
+	draw string (20, SCR_H - 60), console_messages_strings(console_message)
+	draw string (20, SCR_H - 50), "FPS: " + str(abs(int(1.0f/(timer_begin-timer))))
+	
+	
+	
 	draw string (20, SCR_H - 30), "absolute x " + str(user_mouse.abs_x) + ", y " + str(user_mouse.abs_y)
 	'draw string (20, SCR_H - 30), "mouse x " + str(user_mouse.x) + ", y " + str(user_mouse.y)
 	draw string (20, SCR_H - 20), APP_NAME + " " + APP_VERSION, C_BLACK
@@ -392,6 +444,16 @@ do
 	
 	if (int((timer)*10) MOD 2) = 0  then
 		draw string (20, SCR_H - 10), str (int((timer)*10) MOD 2)
+	end if
+	
+	if (settings.is_help_visible) then
+		for i = 0 to SCR_H step 2
+			line(0, i)-(SCR_W, i), C_DARK_GRAY
+		next i
+		for i = 0 to Ubound(on_screen_help)-1
+			draw string (21, 21 + i * 12), on_screen_help(i), C_BLACK
+			draw string (20, 20 + i * 12), on_screen_help(i), C_WHITE
+		next i
 	end if
 	
 	workpage = 1 - Workpage ' Swap work pages.
@@ -412,3 +474,4 @@ redim polygons(0 to 0)
 'destroy bitmaps from memory
 ImageDestroy wallp_img
 ImageDestroy wallp_img_resized
+ImageDestroy rasterized_artwork

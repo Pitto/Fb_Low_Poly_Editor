@@ -35,6 +35,7 @@ type view_area_proto
     rds 	as single
 	zoom 	as single
 	old_zoom 	as single
+	'average_fps(0 to 49)	as integer
 end type
 
 type key_proto
@@ -74,6 +75,7 @@ Type settings_proto
 	wireframe_color as Ulong
 	is_vertex_visible as boolean
 	is_debug as boolean
+	is_help_visible as boolean
 end type
 
 type FIXED as long ' 12:20

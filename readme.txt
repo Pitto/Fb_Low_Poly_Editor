@@ -15,12 +15,21 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 Also add information on how to contact you by electronic and paper mail.
 
+0.08 ___________________________________________________________________
+calculate_bounds of polygons
+draw bounds of polygons
+CTRL + R to create random polygons
+speed optimization: only polygons into viewable artwork are fillled
+while closing a polygon th program picks the average color of the area
+of the polygon itself
+fps counter
+F1 - on screen help
+
 0.07 ___________________________________________________________________
 delete selected paths
 code cleanup
 load .lpe files
 fixed wrong colors in both .lpe e .svg files
-
 
 0.06 ___________________________________________________________________
 delete last path by pressing canc

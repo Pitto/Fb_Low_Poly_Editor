@@ -1,0 +1,28 @@
+HELP
+
+V...........Selection tool
+P...........Pen Tool
+SPACE.......Hand
+CANC........Delete selected polygon/s
+Q...........Show / Hide Points
+W...........Show / Hide Wireframe
+C...........Show / Hide Centroids
+B...........Show / Hide background Bitmap
+S...........Save as .lpe file    <- WILL OVERWRITE EXISTING FILE
+E...........Exports as SVG file  <- WILL OVERWRITE EXISTING FILE
+CTRL + L....load .lpe file
+CTRL + R....Fill artwork with random polygons
+F1..........Show / Hide help
+
+Special thanks to:
+D.J. Peters for his ImageScale function
+Mr Swiss for his code review of the scanline algorithm
+
+Stonemonkey, Muttonhead for their tips
+
+the fill polygon (using scanline algorithm) function is a translation
+of a c snippet by Angad... original source:
+http://code-heaven.blogspot.it/2009/10/simple-c-program-for-scan-line-polygon.html
+
+FB Low Poly Editor is created using FreeBasic language
+www.freebasic.net

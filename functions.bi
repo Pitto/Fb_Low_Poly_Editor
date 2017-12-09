@@ -23,6 +23,16 @@ declare function string_to_rgb (rgb_input as string) as ULong
 'Bmp load by noop
 declare function Load_bmp( ByRef filename As Const String ) As Any Ptr
 
+declare function calculate_bounds (head as point_proto ptr, centroid as point_proto) as segment_proto
+declare function is_overlap( 	Ax1 as single, Ay1 as single, _
+								Ax2 as single, Ay2 as single, _
+								Bx1 as single, By1 as single, _
+								Bx2 as single, By2 as single ) as boolean
+								
+declare function get_average_color (	head as point_proto ptr, _
+										view_area as view_area_proto, _
+										img_name as any ptr) as ULong
+
 'subs declarations______________________________________________________
 
 declare sub add_polygon			(array() as polygon_proto)
@@ -55,6 +65,9 @@ declare sub create_random_polygons	(polygons() as polygon_proto,_
 									artwork_max_h as integer,_
 									view_area as view_area_proto, _
 									img_name as any ptr)
+declare sub draw_bounds 			(bounds	as segment_proto, _
+									view_area as view_area_proto)
+declare sub load_whole_txt_file			(Byref fn As String,  filearr() As String)
 
 '_______________________________________________________________________
 
@@ -450,15 +463,15 @@ Sub draw_vertices(head as point_proto ptr, ByVal c As ULong, view_area as view_a
 	wend
 End Sub
 
-function calculate_bounds (head as point_proto ptr) as segment_proto
+function calculate_bounds (head as point_proto ptr, centroid as point_proto) as segment_proto
 
 	dim bounds as segment_proto
 	dim i as integer
 	
-	bounds.x1 = 0
-	bounds.x1 = 0
-	bounds.y1 = 0
-	bounds.y1 = 0
+	bounds.x1 = centroid.x
+	bounds.x2 = centroid.x
+	bounds.y1 = centroid.y
+	bounds.y2 = centroid.y
 	
 	i = 0
 	while head <> NULL
@@ -544,12 +557,6 @@ Sub fill_polygon(head as point_proto ptr, ByVal c As ULong, view_area as view_ar
 
    Next y
    
-           ''draw wireframe
-      'if (settings.is_wireframe_visible) then
-		'For i = 0 To Ubound(a, 1) - 1
-			'line(a(i+1, 0),a(i+1, 1))-(a(i, 0),a(i, 1)),C_WHITE
-		'next i
-		'end if
 End Sub
 
 sub keyboard_listener(	input_mode as proto_input_mode ptr, _
@@ -574,6 +581,10 @@ sub keyboard_listener(	input_mode as proto_input_mode ptr, _
 	for i = 0 to Ubound(key)-1
 		if (key(i).is_released) then
 			select case key(i).code
+				'show / hide on screen help
+				case SC_F1
+					settings->is_help_visible = not settings->is_help_visible
+					reset_key_status(@key(i))
 				'show / hide debug info
 				case SC_D
 					settings->is_debug = not settings->is_debug
@@ -624,8 +635,8 @@ sub keyboard_listener(	input_mode as proto_input_mode ptr, _
 				case SC_R
 					if (multikey(SC_CONTROL)) then
 						*input_mode = input_create_random_polygons
-						reset_key_status(@key(i))
 					end if
+					reset_key_status(@key(i))
 			end select
 		end if
 	
@@ -1044,11 +1055,11 @@ sub create_random_polygons	(polygons() as polygon_proto,_
 		next j
 		
 		polygons(Ubound(polygons)-1).centroid = calculate_centroid(polygons(Ubound(polygons)-1).first_point)
+		polygons(Ubound(polygons)-1).bounds = calculate_bounds (polygons(Ubound(polygons)-1).first_point, polygons(Ubound(polygons)-1).centroid) 
+				
 				polygons(Ubound(polygons)-1).fill_color = _
-				get_pixel_color	(	int(polygons(Ubound(polygons)-1).centroid.x * view_area.zoom), _
-									int(polygons(Ubound(polygons)-1).centroid.y * view_area.zoom), _
-									img_name)
-		
+				get_average_color (	polygons(Ubound(polygons)-1).first_point, _
+									view_area, img_name)
 	next i
 	
 	
@@ -1083,3 +1094,146 @@ dim as string token
 	return (rgb(tokens(1), tokens(2), tokens(3)))
 
 end function
+
+sub draw_bounds (bounds	as segment_proto, view_area as view_area_proto)
+	line 	(bounds.x1*view_area.zoom + view_area.x, _
+			bounds.y1*view_area.zoom + view_area.y) - _
+			(bounds.x2*view_area.zoom + view_area.x, _
+			bounds.y2*view_area.zoom + view_area.y), _
+			 C_WHITE, B, &b1111000011110000	 
+end sub
+
+function is_overlap( 	Ax1 as single, Ay1 as single, _
+						Ax2 as single, Ay2 as single, _
+						Bx1 as single, By1 as single, _
+						Bx2 as single, By2 as single ) as boolean
+						
+	if (Ay2 < By1) or (Ay1 > By2) or (Ax2 < Bx1) or (Ax1 > Bx2) then
+		return false
+	else
+		return true
+	end if
+	
+end function
+
+
+function get_average_color (	head as point_proto ptr, _
+								view_area as view_area_proto, _
+								img_name as any ptr) as ULong
+								
+	dim as Uinteger r, g, b, c, arraylen
+	redim rgb_values(0 to 0) as ULong
+	
+	' Thanks to MrSwiss for the corrections on the below code for 64/32 compiler
+   redim preserve 	a(0 to 0, 0 to 1) as Long
+   Dim As Long      i, j, k, dy, dx, x, y, temp
+  
+   
+   'translate point stored into linked list into points stored into an array
+   i = 0
+   while head <> NULL
+		if (head->next_p <> NULL) then
+			a(i, 0) = head->x
+			a(i, 1) = head->y
+			redim preserve a(0 to  Ubound(a)+1, 0 to 1)
+		end if
+		head = head->next_p
+		i+=1
+	wend
+   
+   Dim As Long      xi(0 to Ubound(a, 1))
+   Dim As Single    slope(0 to Ubound(a, 1))
+   'join first and last vertex
+   a(Ubound(a, 1), 0) = a(0, 0)
+   a(Ubound(a, 1), 1) = a(0, 1)
+
+   For i = 0 To Ubound(a, 1) - 1
+
+	dy = a(i+1, 1) - a(i, 1)
+      dx = a(i+1, 0) - a(i, 0)
+
+      If (dy = 0) Then slope(i) = 1.0
+      If (dx = 0) Then slope(i) = 0.0
+
+      If (dy <> 0) AndAlso (dx <> 0) Then slope(i) = dx / dy
+    
+   Next i
+
+   For y = 0 to SCR_H - 1
+      k = 0
+      ' using FB's short-cut operators (which C doesn't have!)
+      For i = 0 to Ubound(a, 1) - 1
+         If (a(i, 1) <= y AndAlso a(i+1, 1) > y) OrElse _
+             (a(i, 1) > y AndAlso a(i+1, 1) <= y) Then
+            xi(k) = CLng(a(i, 0) + slope(i) * (y - a(i, 1)))
+            k += 1
+         End If
+      Next i
+
+      For j = 0 to k - 2
+         'Arrange x-intersections in order
+         For i = 0 To k - 2
+            If (xi(i) > xi(i + 1)) Then
+               temp = xi(i)
+               xi(i) = xi(i + 1)
+               xi(i + 1) = temp
+            End If
+         Next i
+      Next j
+      'pick rgb values of each line
+		
+      For i = 0 To k - 2 Step 2
+		for j = xi(i) to xi(i + 1) + 1
+			x = j
+			rgb_values(Ubound(rgb_values)) = point(j ,y, img_name)
+			redim preserve rgb_values(0 to Ubound(rgb_values)+1) as ULong
+		next j
+	Next i
+
+   Next y
+	
+	arraylen = UBound(rgb_values) - LBound(rgb_values) + 1
+	
+	r = 0 : g = 0 : b = 0
+
+	for c = Lbound(rgb_values) to Ubound(rgb_values)
+	
+		'get each r, g, b value
+		r += rgb_values(c) shr 16 and &hFF
+		g += rgb_values(c) shr 8 and &hFF
+		b += rgb_values(c) and &hFF
+		
+	next c
+	
+	r = r \ (arraylen)
+	g = g \ (arraylen)
+	b = b \ (arraylen)
+
+	return rgb(r,g,b)
+	
+
+end function
+
+SUB load_whole_txt_file(Byref fn As String,  filearr() As String)
+    'Thanks to bulrush for this very useful sub
+    'this is a snippet based on his source
+    'http://www.freebasic.net/forum/viewtopic.php?f=7&t=24284
+    'this sub read a whole text file and put it into an array
+    Dim As Integer filenum,res,outpos,i,ub
+    Dim As String procname,ln
+
+    outpos 	= 1
+    filenum = Freefile
+    res 	= Open (fn, For Input, As #filenum)
+
+	While (Not Eof(filenum))
+		Line Input #filenum, ln ' Get one whole text line
+		Redim Preserve filearr(outpos)
+		filearr(outpos)	= ln
+		outpos += 1
+	Wend
+
+    Close #filenum
+
+    ub = Ubound(filearr)
+END SUB
