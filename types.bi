@@ -35,6 +35,7 @@ type view_area_proto
     rds 	as single
 	zoom 	as single
 	old_zoom 	as single
+	refresh as boolean
 	'average_fps(0 to 49)	as integer
 end type
 

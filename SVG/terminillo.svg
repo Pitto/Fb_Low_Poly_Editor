@@ -1,0 +1,2378 @@
+<?xml version='1.0' standalone='no'?>
+<!DOCTYPE svg PUBLIC '-//W3C//DTD SVG 1.1//EN' 'http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd'>
+<svg  version='1.1' xmlns='http://www.w3.org/2000/svg'>
+<desc>Low Poly Editor by PittoVersion 0.08 - Export file</desc>
+<polygon fill='rgb(127,127,127)' 
+points='
+' />
+<polygon fill='rgb(173,147,131)' 
+points='
+720,128 
+722.3846,122.9231 
+727,122 
+727,115 
+702,127 
+' />
+<polygon fill='rgb(148,114,99)' 
+points='
+720,128 
+728,129 
+727,122 
+722.3846,122.9231 
+' />
+<polygon fill='rgb(171,133,108)' 
+points='
+727,122 
+728,129 
+732,129 
+727,115 
+' />
+<polygon fill='rgb(138,98,91)' 
+points='
+732,129 
+739,123 
+729.8733,123.0452 
+' />
+<polygon fill='rgb(184,163,147)' 
+points='
+' />
+<polygon fill='rgb(127,127,127)' 
+points='
+' />
+<polygon fill='rgb(127,127,127)' 
+points='
+' />
+<polygon fill='rgb(190,166,147)' 
+points='
+730.1901,123.9321 
+765,104 
+727,115 
+' />
+<polygon fill='rgb(203,179,153)' 
+points='
+739,123 
+729.9638,123.2986 
+747.8854,113.7998 
+768,115 
+766,125 
+739,123 
+' />
+<polygon fill='rgb(198,176,154)' 
+points='
+745.1949,115.3404 
+765,104 
+770,104 
+768,115 
+' />
+<polygon fill='rgb(189,165,144)' 
+points='
+767.8731,115.1663 
+766,125 
+784,121 
+777,103 
+770,104 
+' />
+<polygon fill='rgb(205,181,156)' 
+points='
+' />
+<polygon fill='rgb(175,150,132)' 
+points='
+' />
+<polygon fill='rgb(127,127,127)' 
+points='
+' />
+<polygon fill='rgb(127,127,127)' 
+points='
+' />
+<polygon fill='rgb(202,179,154)' 
+points='
+784,121 
+785,100 
+777,103 
+' />
+<polygon fill='rgb(203,179,154)' 
+points='
+784,121 
+799,121 
+794,100 
+785,100 
+' />
+<polygon fill='rgb(211,187,159)' 
+points='
+799,121 
+814,123 
+802,97 
+794,100 
+' />
+<polygon fill='rgb(215,192,162)' 
+points='
+814,123 
+816,99 
+802,97 
+' />
+<polygon fill='rgb(189,169,151)' 
+points='
+737.9508,111.83 
+717,93 
+747.7118,109.0045 
+' />
+<polygon fill='rgb(194,172,151)' 
+points='
+724.9055,100.1052 
+715,101 
+727,115 
+737.9508,111.83 
+' />
+<polygon fill='rgb(187,166,150)' 
+points='
+725.4586,100.6024 
+715,101 
+683,76 
+717,93 
+' />
+<polygon fill='rgb(199,176,153)' 
+points='
+727,115 
+720.5306,118.1053 
+708,105 
+715,101 
+' />
+<polygon fill='rgb(194,172,153)' 
+points='
+708,105 
+661,63 
+683,76 
+715,101 
+' />
+<polygon fill='rgb(198,174,151)' 
+points='
+720.1404,118.2926 
+715.7191,120.4148 
+701,109 
+708,105 
+' />
+<polygon fill='rgb(200,178,155)' 
+points='
+661,63 
+701,109 
+708,105 
+' />
+<polygon fill='rgb(211,188,160)' 
+points='
+701,109 
+672,101 
+661,63 
+' />
+<polygon fill='rgb(203,179,153)' 
+points='
+716.5319,120.0247 
+702,127 
+701,109 
+' />
+<polygon fill='rgb(218,195,162)' 
+points='
+701,109 
+681,118 
+672,101 
+' />
+<polygon fill='rgb(206,182,154)' 
+points='
+681,118 
+688,124 
+702,127 
+701,109 
+' />
+<polygon fill='rgb(204,179,150)' 
+points='
+688,124 
+673,132 
+681,118 
+' />
+<polygon fill='rgb(217,193,160)' 
+points='
+672,101 
+659,105 
+681,118 
+' />
+<polygon fill='rgb(213,189,158)' 
+points='
+672,101 
+638,95 
+659,105 
+' />
+<polygon fill='rgb(212,189,160)' 
+points='
+672,101 
+655.4564,98.08054 
+661,63 
+' />
+<polygon fill='rgb(211,188,159)' 
+points='
+661,63 
+638,95 
+657.1107,98.37248 
+' />
+<polygon fill='rgb(208,185,158)' 
+points='
+648.3818,80.55569 
+627,71 
+654,62 
+661,63 
+' />
+<polygon fill='rgb(211,187,158)' 
+points='
+627,71 
+606,80 
+638,95 
+648.3818,80.55569 
+' />
+<polygon fill='rgb(127,127,127)' 
+points='
+' />
+<polygon fill='rgb(209,184,153)' 
+points='
+681,118 
+673,132 
+664,130 
+659,127 
+649,126 
+644,112 
+659,105 
+' />
+<polygon fill='rgb(212,188,157)' 
+points='
+638,95 
+644,112 
+659,105 
+' />
+<polygon fill='rgb(127,127,127)' 
+points='
+' />
+<polygon fill='rgb(213,188,157)' 
+points='
+644,112 
+615,100 
+638,95 
+' />
+<polygon fill='rgb(210,185,153)' 
+points='
+644,112 
+649,126 
+635,124 
+640,116 
+' />
+<polygon fill='rgb(210,185,154)' 
+points='
+644,112 
+615,100 
+640,116 
+' />
+<polygon fill='rgb(211,186,153)' 
+points='
+620,112 
+635,124 
+640,116 
+' />
+<polygon fill='rgb(212,188,156)' 
+points='
+640,116 
+620,112 
+615,100 
+' />
+<polygon fill='rgb(191,164,139)' 
+points='
+635,124 
+610,130 
+620,112 
+' />
+<polygon fill='rgb(205,179,149)' 
+points='
+610,130 
+593,114 
+620,112 
+' />
+<polygon fill='rgb(206,180,151)' 
+points='
+' />
+<polygon fill='rgb(209,183,153)' 
+points='
+' />
+<polygon fill='rgb(127,127,127)' 
+points='
+' />
+<polygon fill='rgb(127,127,127)' 
+points='
+' />
+<polygon fill='rgb(207,181,152)' 
+points='
+615,100 
+578,97 
+593,114 
+620,112 
+' />
+<polygon fill='rgb(208,184,155)' 
+points='
+615,100 
+578,97 
+623.012,87.97438 
+638,95 
+' />
+<polygon fill='rgb(197,174,149)' 
+points='
+' />
+<polygon fill='rgb(127,127,127)' 
+points='
+' />
+<polygon fill='rgb(127,127,127)' 
+points='
+' />
+<polygon fill='rgb(199,175,150)' 
+points='
+578,97 
+606,80 
+627.0601,89.87189 
+' />
+<polygon fill='rgb(189,164,141)' 
+points='
+593,114 
+605.9138,126.1541 
+599,128 
+562,105 
+578,97 
+' />
+<polygon fill='rgb(127,127,127)' 
+points='
+' />
+<polygon fill='rgb(198,172,145)' 
+points='
+588.3757,121.3957 
+571,126 
+544,106 
+562,105 
+' />
+<polygon fill='rgb(199,173,145)' 
+points='
+571,126 
+556,125 
+542,126 
+532,131 
+529,127 
+523,120 
+544,106 
+' />
+<polygon fill='rgb(170,142,121)' 
+points='
+528.3466,126.5347 
+532,131 
+508,135 
+523,120 
+' />
+<polygon fill='rgb(127,127,127)' 
+points='
+' />
+<polygon fill='rgb(174,147,127)' 
+points='
+508,135 
+482,137 
+523,120 
+' />
+<polygon fill='rgb(199,173,146)' 
+points='
+523,120 
+479,122 
+508,109 
+544,106 
+' />
+<polygon fill='rgb(195,166,139)' 
+points='
+479,122 
+448,146 
+466,148 
+482,137 
+523,120 
+' />
+<polygon fill='rgb(186,163,143)' 
+points='
+562,105 
+578,97 
+606,80 
+591,84 
+574,94 
+544,106 
+' />
+<polygon fill='rgb(191,167,145)' 
+points='
+544,106 
+574,94 
+580.2056,90.34962 
+574,90 
+547,96 
+508,109 
+' />
+<polygon fill='rgb(203,180,154)' 
+points='
+627,71 
+605,75 
+591,84 
+' />
+<polygon fill='rgb(192,169,147)' 
+points='
+591,84 
+606,80 
+627,71 
+' />
+<polygon fill='rgb(199,176,152)' 
+points='
+591,84 
+580.2056,90.34962 
+581,76 
+605,75 
+' />
+<polygon fill='rgb(212,188,156)' 
+points='
+580.2056,90.34962 
+581,76 
+574,90 
+' />
+<polygon fill='rgb(212,188,157)' 
+points='
+574,90 
+547,96 
+531,93 
+570,84 
+581,76 
+' />
+<polygon fill='rgb(127,127,127)' 
+points='
+' />
+<polygon fill='rgb(208,184,154)' 
+points='
+547,96 
+508,109 
+479,96 
+531,93 
+' />
+<polygon fill='rgb(207,179,150)' 
+points='
+479,96 
+470,104 
+479,122 
+452,101 
+465,97 
+479,96 
+' />
+<polygon fill='rgb(213,187,154)' 
+points='
+470,104 
+508,109 
+479,96 
+' />
+<polygon fill='rgb(203,174,143)' 
+points='
+479,122 
+485.0034,105.9741 
+470,104 
+' />
+<polygon fill='rgb(206,178,145)' 
+points='
+508,109 
+483.0374,105.7155 
+479,122 
+' />
+<polygon fill='rgb(127,127,127)' 
+points='
+' />
+<polygon fill='rgb(127,127,127)' 
+points='
+' />
+<polygon fill='rgb(127,127,127)' 
+points='
+' />
+<polygon fill='rgb(208,179,152)' 
+points='
+465.4308,111.4462 
+433,112 
+452,101 
+' />
+<polygon fill='rgb(209,181,151)' 
+points='
+465.5692,111.5538 
+450,120 
+479,122 
+465.5692,111.5538 
+' />
+<polygon fill='rgb(209,180,153)' 
+points='
+450,120 
+433,112 
+464.9462,111.0692 
+' />
+<polygon fill='rgb(200,169,148)' 
+points='
+433,112 
+405,124 
+427,116 
+450,120 
+' />
+<polygon fill='rgb(205,171,151)' 
+points='
+' />
+<polygon fill='rgb(127,127,127)' 
+points='
+' />
+<polygon fill='rgb(127,127,127)' 
+points='
+' />
+<polygon fill='rgb(208,173,152)' 
+points='
+405,124 
+402,124 
+378,134 
+402,131 
+399,141 
+427,116 
+' />
+<polygon fill='rgb(198,161,142)' 
+points='
+402,131 
+387,140 
+378,134 
+402,131 
+' />
+<polygon fill='rgb(198,161,140)' 
+points='
+402,131 
+387,140 
+401,148 
+399,141 
+402,131 
+' />
+<polygon fill='rgb(161,125,114)' 
+points='
+401,148 
+430,143 
+399,141 
+' />
+<polygon fill='rgb(206,169,142)' 
+points='
+399,141 
+430,128 
+430,143 
+' />
+<polygon fill='rgb(215,180,152)' 
+points='
+399,141 
+427,116 
+430,128 
+' />
+<polygon fill='rgb(127,127,127)' 
+points='
+' />
+<polygon fill='rgb(212,180,153)' 
+points='
+426,115 
+450,120 
+430,128 
+' />
+<polygon fill='rgb(194,162,133)' 
+points='
+479,122 
+459,131 
+450,120 
+' />
+<polygon fill='rgb(187,156,131)' 
+points='
+459,131 
+448,146 
+479,122 
+' />
+<polygon fill='rgb(201,167,139)' 
+points='
+450,120 
+430,128 
+459,131 
+' />
+<polygon fill='rgb(168,129,107)' 
+points='
+430,143 
+448,146 
+459,131 
+' />
+<polygon fill='rgb(185,148,123)' 
+points='
+430,143 
+430,128 
+459,131 
+' />
+<polygon fill='rgb(127,127,127)' 
+points='
+' />
+<polygon fill='rgb(217,193,161)' 
+points='
+570,84 
+531,93 
+534,81 
+581,76 
+' />
+<polygon fill='rgb(212,187,156)' 
+points='
+531,93 
+479,96 
+483,88 
+492,91 
+502,86 
+515,87 
+534,81 
+' />
+<polygon fill='rgb(127,127,127)' 
+points='
+' />
+<polygon fill='rgb(204,181,155)' 
+points='
+479,96 
+467,89 
+483,88 
+' />
+<polygon fill='rgb(203,177,152)' 
+points='
+467,89 
+461,89 
+454,85 
+465,97 
+479,96 
+' />
+<polygon fill='rgb(207,179,151)' 
+points='
+465,97 
+455,93 
+454,85 
+' />
+<polygon fill='rgb(217,189,158)' 
+points='
+465,97 
+452,101 
+448,91 
+454,85 
+455,93 
+' />
+<polygon fill='rgb(127,127,127)' 
+points='
+' />
+<polygon fill='rgb(215,184,156)' 
+points='
+448,91 
+452,101 
+433,112 
+432,100 
+442,84 
+454,85 
+' />
+<polygon fill='rgb(221,191,161)' 
+points='
+432,100 
+432,83 
+442,84 
+' />
+<polygon fill='rgb(225,194,166)' 
+points='
+432,100 
+416,96 
+406,82 
+422,86 
+432,83 
+' />
+<polygon fill='rgb(219,187,159)' 
+points='
+433,112 
+426,115 
+416,96 
+432,100 
+' />
+<polygon fill='rgb(220,187,161)' 
+points='
+426.3621,114.8448 
+405,124 
+416,96 
+' />
+<polygon fill='rgb(209,172,147)' 
+points='
+416,96 
+406,82 
+404,103 
+413,99 
+' />
+<polygon fill='rgb(226,192,164)' 
+points='
+402,124 
+405,124 
+416,96 
+413,99 
+404,103 
+' />
+<polygon fill='rgb(228,195,167)' 
+points='
+404,103 
+391,88 
+406,82 
+' />
+<polygon fill='rgb(223,190,165)' 
+points='
+391,88 
+389,94 
+404,103 
+' />
+<polygon fill='rgb(225,190,163)' 
+points='
+404,103 
+402,124 
+389,94 
+' />
+<polygon fill='rgb(127,127,127)' 
+points='
+' />
+<polygon fill='rgb(223,186,159)' 
+points='
+402,124 
+378,134 
+389,94 
+' />
+<polygon fill='rgb(227,190,163)' 
+points='
+378,134 
+367,121 
+389,94 
+' />
+<polygon fill='rgb(207,168,145)' 
+points='
+378,134 
+371,137 
+354,131 
+367,121 
+' />
+<polygon fill='rgb(226,192,166)' 
+points='
+367,121 
+391,88 
+389,94 
+' />
+<polygon fill='rgb(225,191,168)' 
+points='
+367,121 
+357,91 
+391,88 
+' />
+<polygon fill='rgb(228,193,167)' 
+points='
+357,91 
+354,131 
+367,121 
+' />
+<polygon fill='rgb(127,127,127)' 
+points='
+' />
+<polygon fill='rgb(226,192,166)' 
+points='
+354,131 
+339,123 
+336,95 
+357,91 
+' />
+<polygon fill='rgb(225,190,165)' 
+points='
+339,123 
+321,117 
+311,98 
+336,95 
+' />
+<polygon fill='rgb(224,189,164)' 
+points='
+311,98 
+303,102 
+299,113 
+321,117 
+' />
+<polygon fill='rgb(127,127,127)' 
+points='
+' />
+<polygon fill='rgb(223,188,164)' 
+points='
+299,113 
+289,103 
+295,100 
+303,102 
+' />
+<polygon fill='rgb(210,176,156)' 
+points='
+299,113 
+286,113 
+275,101 
+289,103 
+' />
+<polygon fill='rgb(215,180,157)' 
+points='
+286,113 
+269,111 
+258,101 
+269,99 
+275,101 
+' />
+<polygon fill='rgb(127,127,127)' 
+points='
+' />
+<polygon fill='rgb(127,127,127)' 
+points='
+' />
+<polygon fill='rgb(215,180,158)' 
+points='
+269,111 
+246,111 
+233,99 
+249,97 
+258,101 
+' />
+<polygon fill='rgb(127,127,127)' 
+points='
+' />
+<polygon fill='rgb(214,177,153)' 
+points='
+246,111 
+227,116 
+233,99 
+' />
+<polygon fill='rgb(209,172,151)' 
+points='
+233,99 
+227,116 
+202,122 
+209,105 
+229,100 
+' />
+<polygon fill='rgb(212,176,155)' 
+points='
+202,122 
+197,102 
+209,105 
+' />
+<polygon fill='rgb(215,179,157)' 
+points='
+197,102 
+178,100 
+177,121 
+202,122 
+' />
+<polygon fill='rgb(127,127,127)' 
+points='
+' />
+<polygon fill='rgb(221,185,162)' 
+points='
+177,121 
+165,102 
+178,100 
+' />
+<polygon fill='rgb(221,185,162)' 
+points='
+165,102 
+144,130 
+158,123 
+177,121 
+' />
+<polygon fill='rgb(220,185,162)' 
+points='
+144,130 
+143,105 
+149,106 
+165,102 
+' />
+<polygon fill='rgb(209,173,154)' 
+points='
+144,130 
+110,145 
+131,108 
+143,105 
+' />
+<polygon fill='rgb(127,127,127)' 
+points='
+' />
+<polygon fill='rgb(199,163,148)' 
+points='
+110,145 
+90,150 
+61,153 
+63,149 
+89,134 
+96,130 
+98,123 
+121,109 
+131,108 
+' />
+<polygon fill='rgb(197,163,147)' 
+points='
+96,130 
+108,129 
+98,123 
+' />
+<polygon fill='rgb(127,127,127)' 
+points='
+' />
+<polygon fill='rgb(127,127,127)' 
+points='
+' />
+<polygon fill='rgb(127,127,127)' 
+points='
+' />
+<polygon fill='rgb(127,127,127)' 
+points='
+' />
+<polygon fill='rgb(127,127,127)' 
+points='
+' />
+<polygon fill='rgb(127,127,127)' 
+points='
+' />
+<polygon fill='rgb(177,155,131)' 
+points='
+794,100 
+793,96 
+786,96 
+785,100 
+' />
+<polygon fill='rgb(173,151,133)' 
+points='
+802,97 
+802,92 
+793,96 
+' />
+<polygon fill='rgb(187,162,138)' 
+points='
+793,96 
+794,100 
+802,97 
+' />
+<polygon fill='rgb(129,125,133)' 
+points='
+' />
+<polygon fill='rgb(210,189,161)' 
+points='
+' />
+<polygon fill='rgb(127,127,127)' 
+points='
+' />
+<polygon fill='rgb(127,127,127)' 
+points='
+' />
+<polygon fill='rgb(127,127,127)' 
+points='
+' />
+<polygon fill='rgb(214,191,161)' 
+points='
+827,106 
+838,100 
+816,99 
+' />
+<polygon fill='rgb(127,127,127)' 
+points='
+' />
+<polygon fill='rgb(207,183,155)' 
+points='
+816,99 
+814,123 
+824,124 
+832,129 
+844,130 
+827,106 
+' />
+<polygon fill='rgb(204,182,157)' 
+points='
+' />
+<polygon fill='rgb(127,127,127)' 
+points='
+' />
+<polygon fill='rgb(127,127,127)' 
+points='
+' />
+<polygon fill='rgb(211,187,159)' 
+points='
+835.1954,117.5699 
+854,106 
+838,100 
+827,106 
+' />
+<polygon fill='rgb(197,172,148)' 
+points='
+854,106 
+872,111 
+867,127 
+844,130 
+835.1954,117.5699 
+' />
+<polygon fill='rgb(188,162,142)' 
+points='
+867,127 
+882,129 
+896,130 
+896,116 
+872,111 
+' />
+<polygon fill='rgb(193,167,145)' 
+points='
+896,130 
+908,131 
+932,140 
+919,122 
+896,116 
+' />
+<polygon fill='rgb(189,162,140)' 
+points='
+932,140 
+949,136 
+919,122 
+' />
+<polygon fill='rgb(127,127,127)' 
+points='
+' />
+<polygon fill='rgb(127,127,127)' 
+points='
+' />
+<polygon fill='rgb(99,74,81)' 
+points='
+932,140 
+945,147 
+960,147 
+965,138 
+949,136 
+' />
+<polygon fill='rgb(102,79,85)' 
+points='
+960,147 
+977,143 
+980,149 
+992,142 
+965,138 
+' />
+<polygon fill='rgb(128,90,82)' 
+points='
+960,147 
+977,143 
+980,149 
+972,154 
+962,152 
+945,147 
+' />
+<polygon fill='rgb(76,57,69)' 
+points='
+992,142 
+996,152 
+980,149 
+' />
+<polygon fill='rgb(73,55,69)' 
+points='
+996,152 
+1006,134 
+992,142 
+' />
+<polygon fill='rgb(76,56,67)' 
+points='
+1006,134 
+1007,151 
+996,152 
+' />
+<polygon fill='rgb(73,54,68)' 
+points='
+1006,134 
+1007,151 
+1019,127 
+1011,131 
+' />
+<polygon fill='rgb(91,73,84)' 
+points='
+1007,151 
+1023,151 
+1023,125 
+1019,127 
+' />
+<polygon fill='rgb(127,127,127)' 
+points='
+' />
+<polygon fill='rgb(127,127,127)' 
+points='
+' />
+<polygon fill='rgb(86,62,73)' 
+points='
+932,140 
+913,146 
+945,147 
+' />
+<polygon fill='rgb(107,80,85)' 
+points='
+913,146 
+908,131 
+932,140 
+' />
+<polygon fill='rgb(101,76,81)' 
+points='
+910.7,139.1 
+893,139 
+889,146 
+913,146 
+' />
+<polygon fill='rgb(119,89,89)' 
+points='
+893,139 
+896,130 
+908,131 
+910.7,139.1 
+' />
+<polygon fill='rgb(89,66,75)' 
+points='
+' />
+<polygon fill='rgb(127,127,127)' 
+points='
+' />
+<polygon fill='rgb(127,127,127)' 
+points='
+' />
+<polygon fill='rgb(90,66,75)' 
+points='
+882,129 
+872,147 
+889,146 
+893,139 
+896,130 
+' />
+<polygon fill='rgb(89,67,76)' 
+points='
+872,147 
+855,138 
+867,127 
+' />
+<polygon fill='rgb(87,65,75)' 
+points='
+872,147 
+867,127 
+882,129 
+882,129 
+' />
+<polygon fill='rgb(91,68,78)' 
+points='
+855,138 
+844,130 
+867,127 
+' />
+<polygon fill='rgb(127,127,127)' 
+points='
+' />
+<polygon fill='rgb(127,127,127)' 
+points='
+' />
+<polygon fill='rgb(127,127,127)' 
+points='
+' />
+<polygon fill='rgb(127,127,127)' 
+points='
+' />
+<polygon fill='rgb(127,127,127)' 
+points='
+' />
+<polygon fill='rgb(91,64,71)' 
+points='
+872,147 
+855,149 
+848,144 
+855,138 
+' />
+<polygon fill='rgb(93,67,76)' 
+points='
+848,144 
+832,129 
+844,130 
+855,138 
+' />
+<polygon fill='rgb(91,68,73)' 
+points='
+832,129 
+831,141 
+848,144 
+' />
+<polygon fill='rgb(95,74,78)' 
+points='
+831,141 
+815,131 
+824,124 
+832,129 
+' />
+<polygon fill='rgb(117,83,76)' 
+points='
+855,149 
+826,151 
+831,141 
+' />
+<polygon fill='rgb(107,79,76)' 
+points='
+831,141 
+848,144 
+855,149 
+' />
+<polygon fill='rgb(89,65,72)' 
+points='
+826,151 
+798,147 
+813,132 
+831,141 
+' />
+<polygon fill='rgb(88,64,72)' 
+points='
+815,131 
+813,132 
+831,141 
+' />
+<polygon fill='rgb(107,81,83)' 
+points='
+813.0378,122.6845 
+799,121 
+798,147 
+813,132 
+815,131 
+824,124 
+' />
+<polygon fill='rgb(91,68,76)' 
+points='
+798,147 
+774,151 
+784,121 
+799,121 
+' />
+<polygon fill='rgb(90,66,74)' 
+points='
+774,151 
+762,157 
+766,125 
+784,121 
+' />
+<polygon fill='rgb(109,84,87)' 
+points='
+766,125 
+747,135 
+739,123 
+766,125 
+' />
+<polygon fill='rgb(88,65,72)' 
+points='
+762,157 
+731,174 
+747,135 
+766,125 
+' />
+<polygon fill='rgb(127,127,127)' 
+points='
+' />
+<polygon fill='rgb(94,72,78)' 
+points='
+739,123 
+747,135 
+732,129 
+' />
+<polygon fill='rgb(89,66,74)' 
+points='
+747,135 
+739.1756,154.072 
+717,142 
+728,129 
+732,129 
+' />
+<polygon fill='rgb(86,62,69)' 
+points='
+739.3196,153.7209 
+731,174 
+715,181 
+673,163 
+717,142 
+' />
+<polygon fill='rgb(88,66,73)' 
+points='
+717,142 
+683,141 
+702,127 
+720,128 
+728,129 
+' />
+<polygon fill='rgb(104,80,83)' 
+points='
+683,141 
+673,132 
+688,124 
+702,127 
+' />
+<polygon fill='rgb(138,108,94)' 
+points='
+628,140 
+635,124 
+610,130 
+' />
+<polygon fill='rgb(117,91,86)' 
+points='
+628,140 
+664,130 
+659,127 
+649,126 
+635,124 
+' />
+<polygon fill='rgb(93,68,71)' 
+points='
+683,141 
+673,132 
+664,130 
+628,140 
+' />
+<polygon fill='rgb(87,64,70)' 
+points='
+673,163 
+683,141 
+694.9896,141.3526 
+717,142 
+' />
+<polygon fill='rgb(82,59,64)' 
+points='
+683,141 
+628,140 
+673,163 
+' />
+<polygon fill='rgb(127,127,127)' 
+points='
+' />
+<polygon fill='rgb(78,55,61)' 
+points='
+628,140 
+623,142 
+673,163 
+' />
+<polygon fill='rgb(80,58,64)' 
+points='
+623,142 
+599,128 
+605.3523,125.6257 
+610,130 
+628,140 
+' />
+<polygon fill='rgb(90,68,71)' 
+points='
+573,130 
+594,130 
+623,142 
+599,128 
+587.9273,121.117 
+571,126 
+' />
+<polygon fill='rgb(98,72,74)' 
+points='
+553,131 
+542,126 
+556,125 
+571,126 
+573,130 
+' />
+<polygon fill='rgb(76,53,61)' 
+points='
+542,126 
+532,131 
+531,136 
+553,131 
+' />
+<polygon fill='rgb(127,127,127)' 
+points='
+' />
+<polygon fill='rgb(75,54,61)' 
+points='
+532,131 
+508,135 
+501,142 
+531,136 
+' />
+<polygon fill='rgb(85,61,65)' 
+points='
+501,142 
+482,137 
+508,135 
+' />
+<polygon fill='rgb(72,51,57)' 
+points='
+466,148 
+501,142 
+' />
+<polygon fill='rgb(95,70,71)' 
+points='
+501,142 
+482,137 
+466,148 
+' />
+<polygon fill='rgb(127,127,127)' 
+points='
+' />
+<polygon fill='rgb(127,127,127)' 
+points='
+' />
+<polygon fill='rgb(127,127,127)' 
+points='
+' />
+<polygon fill='rgb(127,127,127)' 
+points='
+' />
+<polygon fill='rgb(127,127,127)' 
+points='
+' />
+<polygon fill='rgb(127,127,127)' 
+points='
+' />
+<polygon fill='rgb(115,79,86)' 
+points='
+378,134 
+387,140 
+401,148 
+371,137 
+' />
+<polygon fill='rgb(127,127,127)' 
+points='
+' />
+<polygon fill='rgb(127,127,127)' 
+points='
+' />
+<polygon fill='rgb(127,127,127)' 
+points='
+' />
+<polygon fill='rgb(180,140,125)' 
+points='
+227,116 
+246,111 
+239,128 
+224,129 
+187,141 
+183,139 
+202,122 
+' />
+<polygon fill='rgb(145,102,94)' 
+points='
+239,128 
+267,140 
+269,111 
+246,111 
+' />
+<polygon fill='rgb(175,134,119)' 
+points='
+268.5148,118.0355 
+288,120 
+286,113 
+269,111 
+' />
+<polygon fill='rgb(179,138,123)' 
+points='
+286,113 
+299,113 
+307,124 
+288,120 
+' />
+<polygon fill='rgb(127,127,127)' 
+points='
+' />
+<polygon fill='rgb(180,140,124)' 
+points='
+299,113 
+321,117 
+318,125 
+307,124 
+' />
+<polygon fill='rgb(185,145,128)' 
+points='
+321,117 
+339,123 
+330,128 
+318,125 
+' />
+<polygon fill='rgb(178,136,119)' 
+points='
+339,123 
+354,131 
+342,135 
+330,128 
+' />
+<polygon fill='rgb(156,111,99)' 
+points='
+354,131 
+371,137 
+366,142 
+341,150 
+348,140 
+342,135 
+' />
+<polygon fill='rgb(126,84,82)' 
+points='
+401,148 
+366,142 
+371,137 
+' />
+<polygon fill='rgb(124,81,79)' 
+points='
+366,142 
+341,150 
+401,148 
+' />
+<polygon fill='rgb(130,84,79)' 
+points='
+268.5148,118.0355 
+267,140 
+277,133 
+290,135 
+288,120 
+' />
+<polygon fill='rgb(139,92,83)' 
+points='
+307,124 
+303,142 
+290,135 
+288,120 
+' />
+<polygon fill='rgb(132,85,78)' 
+points='
+303,142 
+316.2573,139.6662 
+320,146 
+318,125 
+307,124 
+' />
+<polygon fill='rgb(131,86,82)' 
+points='
+320,146 
+335,141 
+330,128 
+318,125 
+' />
+<polygon fill='rgb(141,92,84)' 
+points='
+335,141 
+342,135 
+330,128 
+' />
+<polygon fill='rgb(127,82,78)' 
+points='
+342,135 
+348,140 
+341,150 
+339,144 
+335,141 
+' />
+<polygon fill='rgb(127,127,127)' 
+points='
+' />
+<polygon fill='rgb(127,127,127)' 
+points='
+' />
+<polygon fill='rgb(127,127,127)' 
+points='
+' />
+<polygon fill='rgb(127,127,127)' 
+points='
+' />
+<polygon fill='rgb(127,127,127)' 
+points='
+' />
+<polygon fill='rgb(127,127,127)' 
+points='
+' />
+<polygon fill='rgb(146,108,103)' 
+points='
+202,122 
+192.0559,121.6022 
+183,139 
+' />
+<polygon fill='rgb(87,54,67)' 
+points='
+' />
+<polygon fill='rgb(127,127,127)' 
+points='
+' />
+<polygon fill='rgb(127,127,127)' 
+points='
+' />
+<polygon fill='rgb(87,54,67)' 
+points='
+177,121 
+161,142 
+183,139 
+192.016,121.6006 
+177,121 
+' />
+<polygon fill='rgb(93,59,72)' 
+points='
+161,142 
+158,123 
+177,121 
+' />
+<polygon fill='rgb(85,52,67)' 
+points='
+144,130 
+140,143 
+161,142 
+' />
+<polygon fill='rgb(95,61,74)' 
+points='
+161,142 
+158,123 
+144,130 
+' />
+<polygon fill='rgb(90,56,70)' 
+points='
+140,143 
+116,151 
+90,150 
+110,145 
+144,130 
+' />
+<polygon fill='rgb(127,127,127)' 
+points='
+' />
+<polygon fill='rgb(73,47,60)' 
+points='
+277,133 
+290,135 
+303,142 
+303,150 
+263,152 
+267,140 
+' />
+<polygon fill='rgb(74,49,61)' 
+points='
+303,150 
+321,151 
+320,146 
+316.2573,139.6662 
+303,142 
+' />
+<polygon fill='rgb(78,52,63)' 
+points='
+320,146 
+335,141 
+339,144 
+341,150 
+321,151 
+' />
+<polygon fill='rgb(69,42,54)' 
+points='
+' />
+<polygon fill='rgb(127,127,127)' 
+points='
+263,152 
+' />
+<polygon fill='rgb(127,127,127)' 
+points='
+' />
+<polygon fill='rgb(127,127,127)' 
+points='
+' />
+<polygon fill='rgb(66,42,54)' 
+points='
+263,152 
+257.288,147.0142 
+249,153 
+223,150 
+267,140 
+' />
+<polygon fill='rgb(77,47,60)' 
+points='
+223,150 
+240,142 
+239,128 
+267,140 
+' />
+<polygon fill='rgb(82,49,57)' 
+points='
+240,142 
+206,145 
+223,150 
+' />
+<polygon fill='rgb(88,54,65)' 
+points='
+206,145 
+187,141 
+224,129 
+239,128 
+240,142 
+' />
+<polygon fill='rgb(127,127,127)' 
+points='
+' />
+<polygon fill='rgb(127,127,127)' 
+points='
+' />
+<polygon fill='rgb(127,127,127)' 
+points='
+' />
+<polygon fill='rgb(66,41,52)' 
+points='
+61,153 
+3,153 
+1,165 
+63,162 
+61,153 
+' />
+<polygon fill='rgb(79,55,63)' 
+points='
+63,162 
+94,162 
+90,150 
+61,153 
+' />
+<polygon fill='rgb(81,51,63)' 
+points='
+92,158 
+116,151 
+90,150 
+' />
+<polygon fill='rgb(65,45,58)' 
+points='
+116,151 
+140,143 
+161,142 
+123,160 
+94,162 
+92,158 
+' />
+<polygon fill='rgb(66,44,55)' 
+points='
+161,142 
+183,139 
+187,141 
+206,145 
+197,153 
+183,153 
+172,158 
+123,160 
+' />
+<polygon fill='rgb(127,127,127)' 
+points='
+' />
+<polygon fill='rgb(127,127,127)' 
+points='
+' />
+<polygon fill='rgb(127,127,127)' 
+points='
+' />
+<polygon fill='rgb(92,57,68)' 
+points='
+401,148 
+409,153 
+379,155 
+341,150 
+' />
+<polygon fill='rgb(91,58,68)' 
+points='
+409,153 
+430,143 
+401,148 
+' />
+<polygon fill='rgb(97,65,69)' 
+points='
+430,143 
+448,146 
+445,154 
+409,153 
+' />
+<polygon fill='rgb(108,78,78)' 
+points='
+466,148 
+445,154 
+448,146 
+' />
+<polygon fill='rgb(127,127,127)' 
+points='
+' />
+<polygon fill='rgb(127,127,127)' 
+points='
+' />
+<polygon fill='rgb(97,66,62)' 
+points='
+623,142 
+606,151 
+570,137 
+594,130 
+' />
+<polygon fill='rgb(104,73,67)' 
+points='
+673,163 
+642,172 
+641,160 
+606,151 
+' />
+<polygon fill='rgb(93,64,62)' 
+points='
+606,151 
+623,142 
+673,163 
+' />
+<polygon fill='rgb(90,62,64)' 
+points='
+673,163 
+715,181 
+683,195 
+642,172 
+642,172 
+' />
+<polygon fill='rgb(127,127,127)' 
+points='
+' />
+<polygon fill='rgb(100,64,61)' 
+points='
+798,147 
+792,154 
+819,157 
+826,151 
+' />
+<polygon fill='rgb(105,72,67)' 
+points='
+792,154 
+768.4,153.8 
+774,151 
+798,147 
+' />
+<polygon fill='rgb(94,61,59)' 
+points='
+769.2,153.4 
+762,157 
+767,161 
+792,154 
+' />
+<polygon fill='rgb(86,58,59)' 
+points='
+767,161 
+726,181 
+731,174 
+762,157 
+' />
+<polygon fill='rgb(127,127,127)' 
+points='
+' />
+<polygon fill='rgb(84,55,56)' 
+points='
+726,181 
+712,187 
+715,181 
+731,174 
+' />
+<polygon fill='rgb(127,127,127)' 
+points='
+712,187 
+' />
+<polygon fill='rgb(88,55,55)' 
+points='
+715,181 
+712,187 
+683,195 
+' />
+<polygon fill='rgb(127,127,127)' 
+points='
+' />
+<polygon fill='rgb(127,127,127)' 
+points='
+' />
+<polygon fill='rgb(127,127,127)' 
+points='
+' />
+<polygon fill='rgb(94,60,58)' 
+points='
+792,154 
+767,161 
+793,165 
+819,157 
+' />
+<polygon fill='rgb(91,59,58)' 
+points='
+726,181 
+757,184 
+793,165 
+' />
+<polygon fill='rgb(93,62,59)' 
+points='
+793,165 
+726,181 
+767,161 
+767,161 
+' />
+<polygon fill='rgb(127,127,127)' 
+points='
+' />
+<polygon fill='rgb(86,54,55)' 
+points='
+726,181 
+712,187 
+683,195 
+680,199 
+735,199 
+757,184 
+' />
+<polygon fill='rgb(127,127,127)' 
+points='
+' />
+<polygon fill='rgb(127,127,127)' 
+points='
+' />
+<polygon fill='rgb(127,127,127)' 
+points='
+' />
+<polygon fill='rgb(127,127,127)' 
+points='
+' />
+<polygon fill='rgb(127,127,127)' 
+points='
+' />
+<polygon fill='rgb(127,127,127)' 
+points='
+' />
+<polygon fill='rgb(88,56,56)' 
+points='
+757,184 
+769.5377,191.4645 
+790,187 
+780,198 
+735,199 
+' />
+<polygon fill='rgb(90,57,57)' 
+points='
+769.5377,191.4645 
+790,187 
+819,157 
+793,165 
+757,184 
+' />
+<polygon fill='rgb(98,63,61)' 
+points='
+826,151 
+855,149 
+819,157 
+' />
+<polygon fill='rgb(90,57,58)' 
+points='
+819,157 
+835,174 
+855,149 
+' />
+<polygon fill='rgb(90,57,57)' 
+points='
+835,174 
+790,187 
+819,157 
+' />
+<polygon fill='rgb(88,56,57)' 
+points='
+790,187 
+780,198 
+829,198 
+835,174 
+' />
+<polygon fill='rgb(94,63,62)' 
+points='
+855,149 
+872,147 
+889,146 
+913,146 
+945,147 
+939,161 
+913,159 
+882,157 
+835,174 
+' />
+<polygon fill='rgb(93,61,61)' 
+points='
+' />
+<polygon fill='rgb(127,127,127)' 
+points='
+' />
+<polygon fill='rgb(127,127,127)' 
+points='
+' />
+<polygon fill='rgb(93,61,61)' 
+points='
+855,149 
+847.9756,157.7805 
+889,146 
+872,147 
+' />
+<polygon fill='rgb(127,127,127)' 
+points='
+939,161 
+945,147 
+' />
+<polygon fill='rgb(92,64,62)' 
+points='
+961.207,151.2018 
+972,154 
+939,161 
+945,147 
+' />
+<polygon fill='rgb(90,65,70)' 
+points='
+996,152 
+980,149 
+972,154 
+' />
+<polygon fill='rgb(82,54,57)' 
+points='
+972,154 
+995.11,152.7485 
+1007,151 
+1023,151 
+1022,170 
+1005,162 
+991,160 
+939,161 
+' />
+<polygon fill='rgb(87,55,56)' 
+points='
+829,198 
+903,198 
+882,157 
+835,174 
+' />
+<polygon fill='rgb(86,54,56)' 
+points='
+903,198 
+954,197 
+913,159 
+882,157 
+' />
+<polygon fill='rgb(81,53,56)' 
+points='
+954,197 
+939,161 
+913,159 
+' />
+<polygon fill='rgb(79,51,54)' 
+points='
+' />
+<polygon fill='rgb(127,127,127)' 
+points='
+' />
+<polygon fill='rgb(127,127,127)' 
+points='
+' />
+<polygon fill='rgb(127,127,127)' 
+points='
+' />
+<polygon fill='rgb(79,51,54)' 
+points='
+954,197 
+1006,197 
+991,160 
+939,161 
+' />
+<polygon fill='rgb(76,47,52)' 
+points='
+1006,197 
+1022,196 
+1005,162 
+991,160 
+' />
+<polygon fill='rgb(74,46,51)' 
+points='
+1005,162 
+1022,196 
+1022,170 
+1009.864,164.289 
+' />
+<polygon fill='rgb(127,127,127)' 
+points='
+' />
+<polygon fill='rgb(127,127,127)' 
+points='
+' />
+<polygon fill='rgb(127,127,127)' 
+points='
+' />
+<polygon fill='rgb(127,127,127)' 
+points='
+' />
+<polygon fill='rgb(127,127,127)' 
+points='
+' />
+<polygon fill='rgb(83,56,59)' 
+points='
+683,195 
+680,199 
+591,198 
+642,172 
+' />
+<polygon fill='rgb(80,53,58)' 
+points='
+591,198 
+550,197 
+606,151 
+641,160 
+642,172 
+' />
+<polygon fill='rgb(84,56,59)' 
+points='
+550,197 
+479,196 
+509,164 
+570,137 
+606,151 
+' />
+<polygon fill='rgb(108,72,64)' 
+points='
+594,130 
+573,130 
+553,131 
+570,137 
+' />
+<polygon fill='rgb(102,70,66)' 
+points='
+544,139 
+531,136 
+553,131 
+' />
+<polygon fill='rgb(103,70,64)' 
+points='
+531,136 
+518,145 
+501,142 
+531,136 
+' />
+<polygon fill='rgb(107,73,65)' 
+points='
+553,131 
+570,137 
+544,139 
+' />
+<polygon fill='rgb(98,68,64)' 
+points='
+570,137 
+509,164 
+518,145 
+531,136 
+544,139 
+' />
+<polygon fill='rgb(127,127,127)' 
+points='
+' />
+<polygon fill='rgb(127,127,127)' 
+points='
+' />
+<polygon fill='rgb(97,67,65)' 
+points='
+518,145 
+501,142 
+466,148 
+445,154 
+515.7195,149.8145 
+' />
+<polygon fill='rgb(92,62,61)' 
+points='
+445,154 
+504,156 
+509,164 
+515.7195,149.8145 
+' />
+<polygon fill='rgb(87,57,59)' 
+points='
+504,156 
+509,164 
+485,172 
+472,169 
+412,172 
+445,154 
+' />
+<polygon fill='rgb(83,52,55)' 
+points='
+509,164 
+479,196 
+432,198 
+485,172 
+' />
+<polygon fill='rgb(85,52,58)' 
+points='
+432,198 
+385,198 
+472,169 
+485,172 
+' />
+<polygon fill='rgb(88,54,61)' 
+points='
+385,198 
+412,172 
+472,169 
+' />
+<polygon fill='rgb(97,61,66)' 
+points='
+412,172 
+379,155 
+409,153 
+445,154 
+' />
+<polygon fill='rgb(93,56,64)' 
+points='
+379,155 
+341,150 
+336,199 
+385,198 
+412,172 
+' />
+<polygon fill='rgb(127,127,127)' 
+points='
+' />
+<polygon fill='rgb(127,127,127)' 
+points='
+' />
+<polygon fill='rgb(85,51,62)' 
+points='
+303,150 
+321,151 
+341,150 
+339.2626,167.0268 
+322,161 
+297,159 
+271,157 
+263,152 
+' />
+<polygon fill='rgb(78,47,58)' 
+points='
+263,152 
+271,157 
+259,158 
+249,153 
+257.288,147.0142 
+' />
+<polygon fill='rgb(74,42,55)' 
+points='
+223,150 
+206,145 
+197,153 
+220,157 
+249,153 
+' />
+<polygon fill='rgb(71,43,55)' 
+points='
+183,153 
+172,158 
+181,160 
+197,153 
+' />
+<polygon fill='rgb(127,127,127)' 
+points='
+' />
+<polygon fill='rgb(127,127,127)' 
+points='
+' />
+<polygon fill='rgb(80,43,52)' 
+points='
+94,199 
+0,200 
+1,165 
+' />
+<polygon fill='rgb(81,45,56)' 
+points='
+1,165 
+94,199 
+63,162 
+' />
+<polygon fill='rgb(81,46,57)' 
+points='
+94,199 
+94,162 
+63,162 
+' />
+<polygon fill='rgb(83,48,59)' 
+points='
+94,162 
+123,160 
+94,199 
+' />
+<polygon fill='rgb(127,127,127)' 
+points='
+' />
+<polygon fill='rgb(89,52,61)' 
+points='
+123,160 
+168,158 
+94,199 
+' />
+<polygon fill='rgb(87,49,57)' 
+points='
+168,158 
+172,158 
+181,160 
+208,198 
+94,199 
+' />
+<polygon fill='rgb(80,45,55)' 
+points='
+208,198 
+197,153 
+181,160 
+' />
+<polygon fill='rgb(127,127,127)' 
+points='
+' />
+<polygon fill='rgb(80,45,56)' 
+points='
+220,157 
+249,153 
+259,158 
+283,196 
+248,198 
+201.6645,172.082 
+197,153 
+' />
+<polygon fill='rgb(84,48,58)' 
+points='
+283,196 
+271,157 
+259,158 
+' />
+<polygon fill='rgb(88,52,61)' 
+points='
+297,159 
+322,161 
+339.2626,167.0268 
+336,199 
+283,196 
+' />
+<polygon fill='rgb(84,49,58)' 
+points='
+283,196 
+271,157 
+271,157 
+' />
+<polygon fill='rgb(85,50,59)' 
+points='
+283,196 
+271,157 
+297,159 
+' />
+<polygon fill='rgb(127,127,127)' 
+points='
+283,196 
+' />
+<polygon fill='rgb(84,46,54)' 
+points='
+201.6081,171.8513 
+208,198 
+248,198 
+' />
+<polygon fill='rgb(127,127,127)' 
+points='
+' />
+<polygon fill='rgb(127,127,127)' 
+points='
+' />
+<polygon fill='rgb(127,127,127)' 
+points='
+' />
+<polygon fill='rgb(127,127,127)' 
+points='
+' />
+<polygon fill='rgb(127,127,127)' 
+points='
+' />
+<polygon fill='rgb(127,127,127)' 
+points='
+' />
+<polygon fill='rgb(127,127,127)' 
+points='
+' />
+</svg>

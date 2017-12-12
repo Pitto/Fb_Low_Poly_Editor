@@ -580,26 +580,33 @@ sub keyboard_listener(	input_mode as proto_input_mode ptr, _
 
 	for i = 0 to Ubound(key)-1
 		if (key(i).is_released) then
+			
+		
 			select case key(i).code
 				'show / hide on screen help
 				case SC_F1
 					settings->is_help_visible = not settings->is_help_visible
+					view_area->refresh = true
 					reset_key_status(@key(i))
 				'show / hide debug info
 				case SC_D
 					settings->is_debug = not settings->is_debug
+					view_area->refresh = true
 					reset_key_status(@key(i))
 				'show / hide centroids of polygons
 				case SC_C
 					settings->is_centroid_visible = not settings->is_centroid_visible
+					view_area->refresh = true
 					reset_key_status(@key(i))
 				'show / hide wireframe
 				case SC_W
 					settings->is_wireframe_visible = not settings->is_wireframe_visible
+					view_area->refresh = true
 					reset_key_status(@key(i))
 				'show / hide bitmap
 				case SC_B
 					settings->is_bitmap_visible = not settings->is_bitmap_visible
+					view_area->refresh = true
 					reset_key_status(@key(i))
 				'export as SVG
 				case SC_E
@@ -612,10 +619,12 @@ sub keyboard_listener(	input_mode as proto_input_mode ptr, _
 				'delete all
 				case SC_DELETE
 					*input_mode = input_erase_polygon
+					view_area->refresh = true
 					reset_key_status(@key(i))
 				'show / hide vertices
 				case SC_Q
 					settings->is_vertex_visible = not settings->is_vertex_visible
+					view_area->refresh = true
 					reset_key_status(@key(i))
 				'selection mode
 				case SC_V
@@ -625,19 +634,23 @@ sub keyboard_listener(	input_mode as proto_input_mode ptr, _
 				case SC_P
 					if (*input_mode <> input_add_polygon) then
 						*input_mode = input_add_polygon
-						reset_key_status(@key(i))
 					end if
+					reset_key_status(@key(i))
+				'load lpe file
 				case SC_L
 					if (multikey(SC_CONTROL)) then
 						*input_mode = input_load_lpe_file
-						reset_key_status(@key(i))
 					end if
+					reset_key_status(@key(i))
+				'create random polygons
 				case SC_R
 					if (multikey(SC_CONTROL)) then
 						*input_mode = input_create_random_polygons
 					end if
 					reset_key_status(@key(i))
 			end select
+		
+			
 		end if
 	
 		key(i).old_is_down = key(i).is_down
@@ -1003,8 +1016,13 @@ sub load_lpe_file(filename as string, polygons() as polygon_proto)
 						add_point(@head, cast(single, x), cast(single,y))
 				
 			next i
+			'calculate again centroid and bound
 			polygons(Ubound(polygons)-1).centroid = _
 			calculate_centroid(polygons(Ubound(polygons)-1).first_point)
+			polygons(Ubound(polygons)-1).bounds = _
+			calculate_bounds (polygons(Ubound(polygons)-1).first_point, polygons(Ubound(polygons)-1).centroid) 
+				
+			
 		end if
 	Wend
 

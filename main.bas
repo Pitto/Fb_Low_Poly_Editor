@@ -49,6 +49,7 @@ view_area.x = 0
 view_area.y = 0
 view_area.zoom = 1.0f
 view_area.old_zoom = view_area.zoom
+view_area.refresh = true
 
 
 dim settings as settings_proto
@@ -118,10 +119,11 @@ screenres (SCR_W, SCR_H, 24)
 SetMouse SCR_W\2, SCR_H\2, 0
 
 dim as FB.Image ptr wallp_img = Load_bmp( "img/test.bmp" )
-dim as FB.Image ptr rasterized_artwork = Load_bmp( "img/test.bmp" )
 dim as fb.image ptr wallp_img_resized = ImageScale	(wallp_img,_
 													wallp_img->width*view_area.zoom, _
 													wallp_img->height*view_area.zoom)
+dim as Ulong ptr rasterized_artwork
+rasterized_artwork = IMAGECREATE (SCR_W, SCR_H)
 
 
 dim head as point_proto ptr
@@ -149,13 +151,13 @@ do
 							@settings, key())
 	mouse_listener		(@user_mouse, @view_area)
 	
-	if (int((timer)*100) MOD 2) = 0  then
-		nearest_point = find_nearest_point(polygons(), user_mouse, view_area)
-		dist_from_nearest_point = int (dist		(nearest_point.x,_
-												nearest_point.y, _
-												user_mouse.abs_x, _
-												user_mouse.abs_y))
-	end if
+	'if (int((timer)*100) MOD 2) = 0  then
+	nearest_point = find_nearest_point(polygons(), user_mouse, view_area)
+	dist_from_nearest_point = int (dist		(nearest_point.x,_
+											nearest_point.y, _
+											user_mouse.abs_x, _
+											user_mouse.abs_y))
+	'end if
 											
 	'zoom in / out 
 	if (view_area.old_zoom <> view_area.zoom) then
@@ -166,6 +168,7 @@ do
 		scalechange = view_area.zoom - view_area.old_zoom
 		view_area.x += -(user_mouse.abs_x * scalechange)
 		view_area.y += -(user_mouse.abs_y * scalechange)
+		view_area.refresh = true
 	end if
 	
 	view_area.old_zoom = view_area.zoom
@@ -173,6 +176,7 @@ do
 	if settings.is_hand_active then
 		input_mode = input_hand
 		console_message = cm_TOOL_Hand
+		view_area.refresh = true
 	end if
 	
 	select case input_mode
@@ -186,6 +190,7 @@ do
 		
 			load_lpe_file("output.lpe", polygons())
 			input_mode = input_add_polygon
+			view_area.refresh = true
 	
 		case input_hand
 			'####################### HAND TOOL #########################
@@ -216,6 +221,7 @@ do
 			polygons(Ubound(polygons)-1).is_selected = true
 			input_mode = input_add_point
 			console_message = cm_PEN_Tool
+			view_area.refresh = true
 			
 		case input_add_point
 			
@@ -232,6 +238,7 @@ do
 				end if
 				user_mouse.is_lbtn_released = false
 				console_message = cm_Point_Added
+				view_area.refresh = true
 			end if
 			
 			'close polygon clicking on mouse's right button
@@ -245,12 +252,14 @@ do
 									view_area, wallp_img)
 				user_mouse.is_rbtn_released = false
 				console_message = cm_Polygon_Closed
+				view_area.refresh = true
 			end if
-		
+
 		case input_close_polygon
 		
 			input_mode = input_add_polygon
 			console_message = cm_Polygon_Closed
+			view_area.refresh = true
 			
 		case input_erase_all
 			for c = 0 to Ubound(polygons)-1
@@ -259,6 +268,7 @@ do
 			redim polygons(0 to 0)
 			input_mode = input_add_polygon
 			console_message = cm_Polygon_s_deleted
+			view_area.refresh = true
 			
 		case input_erase_polygon
 			'erase selected polygons
@@ -269,21 +279,23 @@ do
 					polygons(c).centroid.x = 0
 					polygons(c).centroid.y = 0
 				end if
-				
 			next c
 		
 			input_mode = input_add_polygon
 			console_message = cm_Polygon_s_deleted
+			view_area.refresh = true
 			
 		case input_export_as_svg
 			export_as_svg(polygons(), "output.svg")
 			input_mode = input_add_polygon
 			console_message = cm_FILE_EXPORTED
+			view_area.refresh = true
 			
 		case input_save_as_lpe_file
 			save_as_lpe_file(polygons(), "output.lpe")
 			input_mode = input_add_polygon
 			console_message = cm_FILE_SAVED
+			
 			
 		case input_selection
 			if user_mouse.is_lbtn_released then
@@ -309,6 +321,7 @@ do
 					end if
 					
 				next c
+				view_area.refresh = true
 			end if
 			user_mouse.is_lbtn_released = false
 			
@@ -318,6 +331,7 @@ do
 										MAX_POLYGONS_NODES, SCR_W, _
 										SCR_H, view_area, wallp_img)
 				input_mode = input_add_polygon
+				view_area.refresh = true
 	end select
 	
 	timer_diff = timer - timer_begin
@@ -328,54 +342,69 @@ do
 
 	cls
 	
-	if (settings.is_bitmap_visible) then
-		put (view_area.x,view_area.y),wallp_img_resized,pset
-	end if
+
 
 	c=0
 
-	'draw the artwork, but not the current drawing polygon
-	if (Ubound(polygons)-1) > 0 then
 	
-		for c = 0 to Ubound(polygons)-2
-			'fill each polygon only if into current view area
-			
-			if (is_overlap(	polygons(c).bounds.x1, polygons(c).bounds.y1, _
-							polygons(c).bounds.x2, polygons(c).bounds.y2,_
-							-view_area.x/ view_area.zoom, -view_area.y/ view_area.zoom, _
-							-view_area.x/ view_area.zoom + SCR_W/view_area.zoom, _
-							-view_area.y/ view_area.zoom + SCR_H/view_area.zoom)) then													'0, 0, 300,300)) then
-			
-				fill_polygon   (polygons(c).first_point, _
-								CULng(polygons(c).fill_color), _
-								view_area, settings)
-			
-			end if
-			
-			if (settings.is_wireframe_visible) then
-				draw_wireframe(polygons(c).first_point, C_WHITE, view_area, settings)
-			end if
-
-			'draw the centroid of each polygon
-			if (settings.is_centroid_visible) then
-				draw_centroid(polygons(c).centroid, C_GREEN, view_area)
-			end if
-			'highligt selected polygon
-			if polygons(c).is_selected then
-				draw_centroid(polygons(c).centroid, C_RED, view_area)
-				draw_wireframe(polygons(c).first_point, C_GREEN, view_area, settings)
-				draw_bounds(polygons(c).bounds, view_area)
-			end if
-			'show/hide nodes
-			if (settings.is_vertex_visible) then
-				draw_vertices(polygons(c).first_point, C_WHITE, view_area)
-			end if
-			'draw some debug info
-			if (settings.is_debug) then
-				draw_list_points(polygons(c).first_point, 20, 20 + c*20)
-			end if
-		next c
+	if view_area.refresh then 
+	
+		if (settings.is_bitmap_visible) then
+			put (view_area.x,view_area.y),wallp_img_resized,pset
+		end if
+	
+		'draw the artwork, but not the current drawing polygon
+		if (Ubound(polygons)-1) > 0 then
 		
+			for c = 0 to Ubound(polygons)-2
+			
+				'fill each polygon only if into current view area
+				
+				if (is_overlap(	polygons(c).bounds.x1, polygons(c).bounds.y1, _
+								polygons(c).bounds.x2, polygons(c).bounds.y2,_
+								-view_area.x/ view_area.zoom, -view_area.y/ view_area.zoom, _
+								-view_area.x/ view_area.zoom + SCR_W/view_area.zoom, _
+								-view_area.y/ view_area.zoom + SCR_H/view_area.zoom)) then													'0, 0, 300,300)) then
+				
+					fill_polygon   (polygons(c).first_point, _
+									CULng(polygons(c).fill_color), _
+									view_area, settings)
+				
+				end if
+				
+				if (settings.is_wireframe_visible) then
+					draw_wireframe(polygons(c).first_point, C_WHITE, view_area, settings)
+				end if
+
+				'draw the centroid of each polygon
+				if (settings.is_centroid_visible) then
+					draw_centroid(polygons(c).centroid, C_GREEN, view_area)
+				end if
+				'highligt selected polygon
+				if polygons(c).is_selected then
+					draw_centroid(polygons(c).centroid, C_RED, view_area)
+					draw_wireframe(polygons(c).first_point, C_GREEN, view_area, settings)
+					draw_bounds(polygons(c).bounds, view_area)
+				end if
+				'show/hide nodes
+				if (settings.is_vertex_visible) then
+					draw_vertices(polygons(c).first_point, C_WHITE, view_area)
+				end if
+				'draw some debug info
+				if (settings.is_debug) then
+					draw_list_points(polygons(c).first_point, 20, 20 + c*20)
+				end if
+			next c
+			
+		end if
+		
+		view_area.refresh = false
+		GET (0, 0)-(SCR_W - 1, SCR_H - 1), rasterized_artwork
+	
+	else
+	
+		put (0,0), rasterized_artwork, pset
+	
 	end if
 	
 	select case input_mode
@@ -429,22 +458,15 @@ do
 						(user_mouse.drag_x2*view_area.zoom + view_area.x, user_mouse.drag_y2*view_area.zoom + view_area.y), ,B
 			end if
 	end select
-	
-	
-															
+													
 	draw string (20, SCR_H - 60), console_messages_strings(console_message)
 	draw string (20, SCR_H - 50), "FPS: " + str(abs(int(1.0f/(timer_begin-timer))))
-	
-	
+
 	
 	draw string (20, SCR_H - 30), "absolute x " + str(user_mouse.abs_x) + ", y " + str(user_mouse.abs_y)
 	'draw string (20, SCR_H - 30), "mouse x " + str(user_mouse.x) + ", y " + str(user_mouse.y)
 	draw string (20, SCR_H - 20), APP_NAME + " " + APP_VERSION, C_BLACK
 	draw string (20, SCR_H - 21), APP_NAME + " " + APP_VERSION, C_WHITE
-	
-	if (int((timer)*10) MOD 2) = 0  then
-		draw string (20, SCR_H - 10), str (int((timer)*10) MOD 2)
-	end if
 	
 	if (settings.is_help_visible) then
 		for i = 0 to SCR_H step 2

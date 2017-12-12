@@ -15,31 +15,37 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 Also add information on how to contact you by electronic and paper mail.
 
-0.08 ___________________________________________________________________
-calculate_bounds of polygons
-draw bounds of polygons
-CTRL + R to create random polygons
-speed optimization: only polygons into viewable artwork are fillled
-while closing a polygon th program picks the average color of the area
-of the polygon itself
-fps counter
-F1 - on screen help
+0.09 
+*   speed optimization: the artwok is rasterized only on some events
+    causing a lot of FPS gain
+*   fixed a bug in load .lpe file, now also the bound are dinamically
+    re-calculated
 
-0.07 ___________________________________________________________________
-delete selected paths
-code cleanup
-load .lpe files
-fixed wrong colors in both .lpe e .svg files
+0.08 
+*   calculate_bounds of polygons
+*   draw bounds of polygons
+*   CTRL + R to create random polygons
+*   speed optimization: only polygons into viewable artwork are filled
+    while closing a polygon th program picks the average color of the
+    area of the polygon itself
+*   fps counter
+*   F1 - on screen help
 
-0.06 ___________________________________________________________________
-delete last path by pressing canc
-save as .lpe file
-code cleanup
+0.07 
+*   delete selected paths
+*   code cleanup
+*   load .lpe files
+*   fixed wrong colors in both .lpe e .svg files
 
-0.05 ___________________________________________________________________
-wireframe mode
-bitmap show/hide
-points show/hide
+0.06 
+*   delete last path by pressing canc
+*   save as .lpe file
+*   code cleanup
+
+0.05 
+*   wireframe mode
+*   bitmap show/hide
+*   points show/hide
 
 0.04 ___________________________________________________________________
 find nearest point for snapping function optimized
