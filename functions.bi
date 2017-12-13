@@ -68,6 +68,15 @@ declare sub create_random_polygons	(polygons() as polygon_proto,_
 declare sub draw_bounds 			(bounds	as segment_proto, _
 									view_area as view_area_proto)
 declare sub load_whole_txt_file			(Byref fn As String,  filearr() As String)
+declare sub draw_button 			(x as integer, y as integer, w as integer,_
+									h as integer, label as string,_
+									is_selected as boolean)
+declare sub draw_bottom_info (	console_message as string, _
+								view_area as view_area_proto, _
+								user_mouse as mouse_proto, _
+								settings as settings_proto, _
+								timer_begin as single, _
+								on_screen_help() as string)
 
 '_______________________________________________________________________
 
@@ -1255,3 +1264,63 @@ SUB load_whole_txt_file(Byref fn As String,  filearr() As String)
 
     ub = Ubound(filearr)
 END SUB
+
+sub draw_button (x as integer, y as integer, w as integer,_
+							h as integer, label as string,_
+							is_selected as boolean)
+							
+	Line (x,y)-(x+w,y+h),C_GRAY,BF
+	Line (x,y)-(x+w,y+h),C_WHITE,B
+	
+	if (is_selected) then
+		Line (x,y)-(x+w,y+h),C_DARK_GRAY,BF
+		Line (x,y)-(x+w,y+h),C_GRAY,B
+	end if
+	
+	draw string (x + (w \ 2) - len(label)*4, y + h\2 - 2), label
+	
+end sub
+
+sub draw_bottom_info (	console_message as string, _
+						view_area as view_area_proto, _
+						user_mouse as mouse_proto, _
+						settings as settings_proto, _
+						timer_begin as single, _
+						on_screen_help() as string)
+						
+	'zoom
+	draw_button (0, SCR_H - BTN_H, BTN_W, BTN_H, str(view_area.zoom * 100) + " %", true)
+	'tool used
+	draw_button (BTN_W, SCR_H - BTN_H, BTN_W * 2, BTN_H, console_message,true)
+	'bitmap show
+	draw_button (BTN_W*3, SCR_H - BTN_H, BTN_W, BTN_H, "BITMAP",	 settings.is_bitmap_visible)
+	'wireframe show
+	draw_button (BTN_W*4, SCR_H - BTN_H, BTN_W, BTN_H, "WIREFRAME",	 settings.is_wireframe_visible)
+	'snap show
+	draw_button (BTN_W*5, SCR_H - BTN_H, BTN_W, BTN_H, "SNAP",	 settings.is_snap_active)
+	'centroid show
+	draw_button (BTN_W*6, SCR_H - BTN_H, BTN_W, BTN_H, "CENTROID",	 settings.is_centroid_visible)
+	'centroid show
+	draw_button (BTN_W*7, SCR_H - BTN_H, BTN_W, BTN_H, "POINTS",	 settings.is_vertex_visible)
+	'absolute x / y of mouse
+	draw_button (BTN_W*8, SCR_H - BTN_H, BTN_W*2, BTN_H, _
+				"x: " + str(user_mouse.abs_x) + ", y: " + str(user_mouse.abs_y),_
+				true)
+	'FPS
+	draw_button (BTN_W*10, SCR_H - BTN_H, BTN_W, BTN_H, _
+				"FPS: " + str(abs(int(1.0f/(timer_begin-timer)))),_
+				true)
+	
+	'F1 - HELP infos
+	dim i as integer
+	
+	if (settings.is_help_visible) then
+		for i = 0 to SCR_H step 2
+			line(0, i)-(SCR_W, i), C_DARK_GRAY
+		next i
+		for i = 0 to Ubound(on_screen_help)-1
+			draw string (21, 21 + i * 12), on_screen_help(i), C_BLACK
+			draw string (20, 20 + i * 12), on_screen_help(i), C_WHITE
+		next i
+	end if
+end sub

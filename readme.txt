@@ -20,6 +20,7 @@ Also add information on how to contact you by electronic and paper mail.
     causing a lot of FPS gain
 *   fixed a bug in load .lpe file, now also the bound are dinamically
     re-calculated
+*   Bottom bar info
 
 0.08 
 *   calculate_bounds of polygons

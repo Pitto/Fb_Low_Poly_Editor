@@ -459,24 +459,10 @@ do
 			end if
 	end select
 													
-	draw string (20, SCR_H - 60), console_messages_strings(console_message)
-	draw string (20, SCR_H - 50), "FPS: " + str(abs(int(1.0f/(timer_begin-timer))))
+	draw_bottom_info 	(console_messages_strings(console_message), _
+						view_area, user_mouse, settings, timer_begin, _
+						on_screen_help())
 
-	
-	draw string (20, SCR_H - 30), "absolute x " + str(user_mouse.abs_x) + ", y " + str(user_mouse.abs_y)
-	'draw string (20, SCR_H - 30), "mouse x " + str(user_mouse.x) + ", y " + str(user_mouse.y)
-	draw string (20, SCR_H - 20), APP_NAME + " " + APP_VERSION, C_BLACK
-	draw string (20, SCR_H - 21), APP_NAME + " " + APP_VERSION, C_WHITE
-	
-	if (settings.is_help_visible) then
-		for i = 0 to SCR_H step 2
-			line(0, i)-(SCR_W, i), C_DARK_GRAY
-		next i
-		for i = 0 to Ubound(on_screen_help)-1
-			draw string (21, 21 + i * 12), on_screen_help(i), C_BLACK
-			draw string (20, 20 + i * 12), on_screen_help(i), C_WHITE
-		next i
-	end if
 	
 	workpage = 1 - Workpage ' Swap work pages.
 	screenunlock

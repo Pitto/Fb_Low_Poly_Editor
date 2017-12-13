@@ -10,12 +10,14 @@
 'define and consts______________________________________________________
 #define APP_NAME 				"Low Poly Editor by Pitto"
 #define APP_VERSION 			"Version 0.09"
-#define SCR_W 					800		
-#define SCR_H 					600
+#define SCR_W 					1024		
+#define SCR_H 					768
 #define MIN_SNAP_DIST			15
 #define MIN_EDGE_SNAP_DIST		20
 #define RANDOM_POLYGONS_QTY		200
 #define MAX_POLYGONS_NODES		10
+#define BTN_W					80 'GUI standard button width
+#define BTN_H					12 'GUI standard button heigth
 
 
 'colors
