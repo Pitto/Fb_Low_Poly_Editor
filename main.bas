@@ -41,6 +41,7 @@ Dim input_mode				as proto_input_mode
 dim console_message			as proto_console_message
 dim wallp_image				as any ptr
 
+
 user_mouse.is_dragging = false
 user_mouse.is_lbtn_released = false
 user_mouse.is_lbtn_pressed = false
@@ -57,11 +58,13 @@ settings.is_snap_active = true
 settings.is_hand_active = false
 settings.is_bitmap_visible = true
 settings.is_centroid_visible = true
-settings.is_wireframe_visible = true
+settings.is_wireframe_visible = false
 settings.wireframe_color = C_WHITE
 settings.is_vertex_visible = true
 settings.is_debug = false
 settings.is_help_visible = false
+settings.is_snap_point_available = false
+settings.is_alpha_bitmap_visible = true
 
 dim key(0 to 82) as key_proto
 
@@ -122,6 +125,10 @@ dim as FB.Image ptr wallp_img = Load_bmp( "img/test.bmp" )
 dim as fb.image ptr wallp_img_resized = ImageScale	(wallp_img,_
 													wallp_img->width*view_area.zoom, _
 													wallp_img->height*view_area.zoom)
+													
+dim icon_set (0 to 39) 		as Ulong ptr													
+load_icon_set (icon_set(), 240, 96, 10, 4,"data/icon-set.bmp")
+
 dim as Ulong ptr rasterized_artwork
 rasterized_artwork = IMAGECREATE (SCR_W, SCR_H)
 
@@ -137,8 +144,8 @@ do
 	static nearest_point as temp_point_proto
 	static dist_from_nearest_point as Uinteger
 	dim scalechange as single
-	dim timer_diff as single
-	dim timer_begin as single
+	dim timer_diff as double
+	dim timer_begin as double
 	
 
 	timer_begin = timer
@@ -151,14 +158,12 @@ do
 							@settings, key())
 	mouse_listener		(@user_mouse, @view_area)
 	
-	'if (int((timer)*100) MOD 2) = 0  then
 	nearest_point = find_nearest_point(polygons(), user_mouse, view_area)
 	dist_from_nearest_point = int (dist		(nearest_point.x,_
 											nearest_point.y, _
 											user_mouse.abs_x, _
 											user_mouse.abs_y))
-	'end if
-											
+								
 	'zoom in / out 
 	if (view_area.old_zoom <> view_area.zoom) then
 		wallp_img_resized = ImageScale (wallp_img,_
@@ -234,7 +239,7 @@ do
 					add_point(@head, nearest_point.x, nearest_point.y)
 				else
 					polygons(Ubound(polygons)-1).first_point = _
-					add_point(@head, user_mouse.abs_x, user_mouse.abs_y)
+					add_point(@head, user_mouse.old_abs_x, user_mouse.old_abs_y)
 				end if
 				user_mouse.is_lbtn_released = false
 				console_message = cm_Point_Added
@@ -364,7 +369,8 @@ do
 								polygons(c).bounds.x2, polygons(c).bounds.y2,_
 								-view_area.x/ view_area.zoom, -view_area.y/ view_area.zoom, _
 								-view_area.x/ view_area.zoom + SCR_W/view_area.zoom, _
-								-view_area.y/ view_area.zoom + SCR_H/view_area.zoom)) then													'0, 0, 300,300)) then
+								-view_area.y/ view_area.zoom + SCR_H/view_area.zoom)) and _
+								settings.is_wireframe_visible = false then
 				
 					fill_polygon   (polygons(c).first_point, _
 									CULng(polygons(c).fill_color), _
@@ -373,7 +379,7 @@ do
 				end if
 				
 				if (settings.is_wireframe_visible) then
-					draw_wireframe(polygons(c).first_point, C_WHITE, view_area, settings)
+					draw_wireframe(polygons(c).first_point, C_WHITE, view_area, settings, true)
 				end if
 
 				'draw the centroid of each polygon
@@ -383,7 +389,7 @@ do
 				'highligt selected polygon
 				if polygons(c).is_selected then
 					draw_centroid(polygons(c).centroid, C_RED, view_area)
-					draw_wireframe(polygons(c).first_point, C_GREEN, view_area, settings)
+					draw_wireframe(polygons(c).first_point, C_GREEN, view_area, settings, true)
 					draw_bounds(polygons(c).bounds, view_area)
 				end if
 				'show/hide nodes
@@ -398,7 +404,13 @@ do
 			
 		end if
 		
+		'alpha bitmap overlayed
+		if (settings.is_alpha_bitmap_visible) then
+			put (view_area.x,view_area.y),wallp_img_resized,alpha, 75
+		end if
+		
 		view_area.refresh = false
+		
 		GET (0, 0)-(SCR_W - 1, SCR_H - 1), rasterized_artwork
 	
 	else
@@ -414,51 +426,46 @@ do
 			i = (Ubound(polygons)-1)
 			if i < 0 then i = 0
 			if (polygons(i).first_point <> NULL) then
-				draw_wireframe(polygons(i).first_point, C_RED, view_area, settings)
-				if (polygons(i).first_point->next_p <> NULL) then
-					line 	(polygons(i).first_point->x*view_area.zoom + view_area.x, _
-							polygons(i).first_point->y*view_area.zoom + view_area.y)- _
-							(User_Mouse.x, User_Mouse.y), C_WHITE,, &b1100110011001100
-					line 	(polygons(i).first_point->x*view_area.zoom + view_area.x, _
-							polygons(i).first_point->y*view_area.zoom + view_area.y)- _
-							(User_Mouse.x, User_Mouse.y), C_BLACK,, &b0011001100110011
+				draw_wireframe(polygons(i).first_point, C_RED, view_area, settings, false)
+				if user_mouse.is_lbtn_pressed = false then
+					if (polygons(i).first_point->next_p <> NULL)  then
+						line 	(polygons(i).first_point->x*view_area.zoom + view_area.x, _
+								polygons(i).first_point->y*view_area.zoom + view_area.y)- _
+								(User_Mouse.x, User_Mouse.y), C_WHITE,, &b1100110011001100
+						line 	(polygons(i).first_point->x*view_area.zoom + view_area.x, _
+								polygons(i).first_point->y*view_area.zoom + view_area.y)- _
+								(User_Mouse.x, User_Mouse.y), C_BLACK,, &b0011001100110011
+					end if
 				end if
 			end if
 			
 			'highlight nearest point to mouse, skip if Left or right shift key is down
 			if 	Cbool(dist_from_nearest_point < MIN_SNAP_DIST / view_area.zoom) and _
 				settings.is_snap_active then
+				settings.is_snap_point_available = true
+				
 				circle (	nearest_point.x*view_area.zoom + view_area.x, _
 							nearest_point.y*view_area.zoom + view_area.y), 4, C_GREEN, ,,,F
-				line (user_mouse.x-5, user_mouse.y-5)-STEP(10,10), C_DARK_GREEN, B
-				line (user_mouse.x-6, user_mouse.y-6)-STEP(12,12), C_GREEN, B
+				circle (	nearest_point.x*view_area.zoom + view_area.x, _
+							nearest_point.y*view_area.zoom + view_area.y), 2, C_RED, ,,,F
+			else
+				settings.is_snap_point_available = false
 			end if
 
-			'mouse graphical cross pointer
-			if (user_mouse.is_lbtn_pressed) then
-				line (user_mouse.x-5, user_mouse.y-5)-step(10, 10), C_ORANGE, BF
-			end if
-			
-			line (user_mouse.x-5, user_mouse.y-1)-step(10, 2), C_BLACK, BF
-			line (user_mouse.x-1, user_mouse.y-5)-step(2, 10), C_BLACK, BF
-				
-			line (user_mouse.x-10, user_mouse.y)-(user_mouse.x+10, user_mouse.y)
-			line (user_mouse.x, user_mouse.y-10)-(user_mouse.x, user_mouse.y+10)
-			
 		case input_selection
-			line (user_mouse.x-5, user_mouse.y-1)-step(10, 2), C_BLUE, BF
-			line (user_mouse.x-1, user_mouse.y-5)-step(2, 10), C_BLUE, BF
-				
-			line (user_mouse.x-10, user_mouse.y)-(user_mouse.x+10, user_mouse.y)
-			line (user_mouse.x, user_mouse.y-10)-(user_mouse.x, user_mouse.y+10)
-		
-		
-			if user_mouse.is_dragging then
-				line 	(user_mouse.drag_x1*view_area.zoom + view_area.x, user_mouse.drag_y1*view_area.zoom + view_area.y) - _
-						(user_mouse.drag_x2*view_area.zoom + view_area.x, user_mouse.drag_y2*view_area.zoom + view_area.y), ,B
+			
+			if (user_mouse.is_lbtn_pressed) then
+				line (user_mouse.x, user_mouse.y)-(user_mouse.old_x, user_mouse.old_y), C_ORANGE, B
 			end if
+		
+
 	end select
-													
+	
+	 draw_mouse_pointer	(	user_mouse.x, user_mouse.y,_
+							user_mouse.is_lbtn_pressed, _
+							settings.is_snap_point_available, _
+							input_mode, icon_set())
+										
 	draw_bottom_info 	(console_messages_strings(console_message), _
 						view_area, user_mouse, settings, timer_begin, _
 						on_screen_help())
@@ -483,3 +490,7 @@ redim polygons(0 to 0)
 ImageDestroy wallp_img
 ImageDestroy wallp_img_resized
 ImageDestroy rasterized_artwork
+
+for c = 0 to Ubound(icon_set)-1
+	ImageDestroy icon_set(c)
+next c

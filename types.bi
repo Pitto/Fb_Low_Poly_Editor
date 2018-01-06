@@ -48,7 +48,7 @@ end type
 
 Type mouse_proto
     As Integer 		res, x, y, old_x, old_y, wheel, clip, _
-					old_wheel, diff_wheel, abs_x, abs_y
+					old_wheel, diff_wheel, abs_x, abs_y, old_abs_x, old_abs_y
     as single 		oppo_x, oppo_y, old_oppo_x, old_oppo_y, _
 					drag_x1, drag_y1, drag_x2, drag_y2, _
 					bounding_x1, bounding_y1, bounding_x2, bounding_y2
@@ -69,6 +69,7 @@ End Type
 
 Type settings_proto
 	is_snap_active as boolean
+	is_snap_point_available as boolean
 	is_hand_active as boolean
 	is_centroid_visible as boolean
 	is_wireframe_visible as boolean
@@ -77,6 +78,7 @@ Type settings_proto
 	is_vertex_visible as boolean
 	is_debug as boolean
 	is_help_visible as boolean
+	is_alpha_bitmap_visible as boolean
 end type
 
 type FIXED as long ' 12:20

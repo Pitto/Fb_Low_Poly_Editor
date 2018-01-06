@@ -21,6 +21,9 @@ Also add information on how to contact you by electronic and paper mail.
 *   fixed a bug in load .lpe file, now also the bound are dinamically
     re-calculated
 *   Bottom bar info
+*   Check if file exists while opening a saved artwork
+*   transparency bitmap overlayed on the artwork
+*   better documentation, available at runtime by pressing F1
 
 0.08 
 *   calculate_bounds of polygons
@@ -48,15 +51,15 @@ Also add information on how to contact you by electronic and paper mail.
 *   bitmap show/hide
 *   points show/hide
 
-0.04 ___________________________________________________________________
+0.04 
 find nearest point for snapping function optimized
 
-0.03 ___________________________________________________________________
+0.03 
 Pan & Zoom
 
-0.02 ___________________________________________________________________
+0.02 
 Erase all polygons
 Save graphic as SVG
 
-0.01 ___________________________________________________________________
+0.01
 Close polygons

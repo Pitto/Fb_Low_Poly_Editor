@@ -16,7 +16,7 @@
 #define MIN_EDGE_SNAP_DIST		20
 #define RANDOM_POLYGONS_QTY		200
 #define MAX_POLYGONS_NODES		10
-#define BTN_W					80 'GUI standard button width
+#define BTN_W					90 'GUI standard button width
 #define BTN_H					12 'GUI standard button heigth
 
 

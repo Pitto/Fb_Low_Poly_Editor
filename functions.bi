@@ -55,7 +55,10 @@ declare sub quicksort(array() as temp_point_proto, _left as integer, _right as i
 declare Sub draw_vertices(head as point_proto ptr, ByVal c As ULong, view_area as view_area_proto)
 declare sub reset_key_status(key as key_proto ptr)
 declare sub save_as_lpe_file(array() as polygon_proto, file_name as string)
-declare sub draw_wireframe(head as point_proto ptr, ByVal c As ULong, view_area as view_area_proto, settings as settings_proto)
+declare sub draw_wireframe	(head as point_proto ptr, ByVal c As ULong, _
+							view_area as view_area_proto, _
+							settings as settings_proto, _
+							close_path as boolean)
 declare sub pop_polygon(array() as polygon_proto, polygon as polygon_proto)
 declare sub load_lpe_file(filename as string, polygons() as polygon_proto)
 declare sub create_random_polygons	(polygons() as polygon_proto,_
@@ -75,8 +78,16 @@ declare sub draw_bottom_info (	console_message as string, _
 								view_area as view_area_proto, _
 								user_mouse as mouse_proto, _
 								settings as settings_proto, _
-								timer_begin as single, _
+								timer_begin as double, _
 								on_screen_help() as string)
+declare sub load_icon_set ( 	bmp() as Ulong ptr, w as integer, _
+								h as integer, cols as integer, rows as integer, _
+								Byref bmp_path as string)
+declare sub draw_mouse_pointer	(	x as integer, y as integer, _
+									lbtn_pressed as boolean, _
+									is_snap_point_available as boolean, _
+									input_mode as proto_input_mode, _
+									icon_set() as Ulong ptr)
 
 '_______________________________________________________________________
 
@@ -617,6 +628,12 @@ sub keyboard_listener(	input_mode as proto_input_mode ptr, _
 					settings->is_bitmap_visible = not settings->is_bitmap_visible
 					view_area->refresh = true
 					reset_key_status(@key(i))
+				'show / hide alpha bitmap overlayed
+				case SC_X
+					settings->is_alpha_bitmap_visible = _
+					not settings->is_alpha_bitmap_visible
+					view_area->refresh = true
+					reset_key_status(@key(i))
 				'export as SVG
 				case SC_E
 					*input_mode = input_export_as_svg
@@ -712,6 +729,9 @@ sub mouse_listener(user_mouse as mouse_proto ptr, view_area as view_area_proto p
 	
 	user_mouse->abs_x = int(user_mouse->x / view_area->zoom + (-view_area->x / view_area->zoom))
 	user_mouse->abs_y = int(user_mouse->y / view_area->zoom + (-view_area->y / view_area->zoom))
+	
+	user_mouse->old_abs_x = int(user_mouse->old_x / view_area->zoom + (-view_area->x / view_area->zoom))
+	user_mouse->old_abs_y = int(user_mouse->old_y / view_area->zoom + (-view_area->y / view_area->zoom))
 	
 	if User_Mouse->old_wheel < User_Mouse->wheel and view_area->zoom < 4 then
       view_area->zoom *= 2.0f
@@ -927,7 +947,10 @@ sub reset_key_status (key as key_proto ptr)
 	key->old_is_down = false
 end sub
 
-Sub draw_wireframe(head as point_proto ptr, ByVal c As ULong, view_area as view_area_proto, settings as settings_proto)
+Sub draw_wireframe(	head as point_proto ptr, ByVal c As ULong, _
+					view_area as view_area_proto, _
+					settings as settings_proto, _
+					close_path as boolean)
 
    redim preserve 	a(0 to 0) as point_proto
    Dim i As Long
@@ -943,13 +966,26 @@ Sub draw_wireframe(head as point_proto ptr, ByVal c As ULong, view_area as view_
 		i+=1
 	wend
    
-   'join first and last vertex
-   a(Ubound(a)) = a(0)
 
-	'draw wireframe
-	For i = 0 To Ubound(a) - 1
-		line(a(i+1).x,a(i+1).y)-(a(i).x,a(i).y),c
-	next i
+	if close_path then
+	   'join first and last vertex
+		a(Ubound(a)) = a(0)
+		'draw joined wireframe
+		For i = 0 To Ubound(a) - 1
+			line(a(i+1).x,a(i+1).y)-(a(i).x,a(i).y),c
+		next i
+	else
+		'join first and last vertex
+		a(Ubound(a)) = a(0)
+		'draw unjoined wireframe
+		if Ubound(a) > 1 then
+			For i = 0 To Ubound(a) - 2
+				line(a(i+1).x,a(i+1).y)-(a(i).x,a(i).y),c
+			next i
+		end if
+	end if
+
+
 
 End Sub
 
@@ -974,68 +1010,69 @@ sub load_lpe_file(filename as string, polygons() as polygon_proto)
 	res 	= Open (filename, For Input, As #filenum)
 
 	j = 0
-
-	While (Not Eof(filenum))
-		
-		Line Input #filenum, textline ' Get one whole text line
-		j +=1
-		redim tokens(0 to 0)
-		
-		do
-			' next semicolor position
-			pos2 = instr(pos1, textline, ";")
-			' if new semicolon found,
-			' take the substring between the last semicolon and it
-			if pos2 > 0 Then
-				token = mid(textline, pos1, pos2 - pos1)    ' calc. len (new)
-			Else
-				token = Mid(textline, pos1)
-			end if
-		   
-			' add the token to the end of the array (slightly inefficient)
-			redim preserve tokens(0 to ubound(tokens) + 1)
-			tokens(ubound(tokens)) = token
-		   
-			pos1 = pos2 + 1 ' added + 1
-		loop until pos2 = 0
-		
-		'skip if there is an empty line
-		if Ubound(tokens) > 2 then
-			add_polygon(polygons())
+	if res = 0 then 
+		While (Not Eof(filenum))
 			
-			dim head as point_proto ptr
-			head = polygons(Ubound(polygons)-1).first_point
+			Line Input #filenum, textline ' Get one whole text line
+			j +=1
+			redim tokens(0 to 0)
 			
-			'fill main data of polygon
-			polygons(Ubound(polygons)-1).fill_color = string_to_rgb(tokens(1))
-			polygons(Ubound(polygons)-1).is_selected = false
-
-			'skip first point since it contains only color and centroid data
-			for i as integer = ubound(tokens)-1 to 2 step -1
-				dim as string x, y
-				dim as integer comma_pos
-				'print tokens(i)
-				comma_pos = instr(tokens(i), ",")
-				if (comma_pos) then
-					x = mid(tokens(i), 2, comma_pos -2)
-					y = mid(tokens(i), comma_pos + 1, len(tokens(i))-(comma_pos-1))
+			do
+				' next semicolor position
+				pos2 = instr(pos1, textline, ";")
+				' if new semicolon found,
+				' take the substring between the last semicolon and it
+				if pos2 > 0 Then
+					token = mid(textline, pos1, pos2 - pos1)    ' calc. len (new)
+				Else
+					token = Mid(textline, pos1)
 				end if
-				
-				polygons(Ubound(polygons)-1).first_point = _
-						add_point(@head, cast(single, x), cast(single,y))
-				
-			next i
-			'calculate again centroid and bound
-			polygons(Ubound(polygons)-1).centroid = _
-			calculate_centroid(polygons(Ubound(polygons)-1).first_point)
-			polygons(Ubound(polygons)-1).bounds = _
-			calculate_bounds (polygons(Ubound(polygons)-1).first_point, polygons(Ubound(polygons)-1).centroid) 
-				
+			   
+				' add the token to the end of the array (slightly inefficient)
+				redim preserve tokens(0 to ubound(tokens) + 1)
+				tokens(ubound(tokens)) = token
+			   
+				pos1 = pos2 + 1 ' added + 1
+			loop until pos2 = 0
 			
-		end if
-	Wend
+			'skip if there is an empty line
+			if Ubound(tokens) > 2 then
+				add_polygon(polygons())
+				
+				dim head as point_proto ptr
+				head = polygons(Ubound(polygons)-1).first_point
+				
+				'fill main data of polygon
+				polygons(Ubound(polygons)-1).fill_color = string_to_rgb(tokens(1))
+				polygons(Ubound(polygons)-1).is_selected = false
 
-	Close #filenum
+				'skip first point since it contains only color and centroid data
+				for i as integer = ubound(tokens)-1 to 2 step -1
+					dim as string x, y
+					dim as integer comma_pos
+					'print tokens(i)
+					comma_pos = instr(tokens(i), ",")
+					if (comma_pos) then
+						x = mid(tokens(i), 2, comma_pos -2)
+						y = mid(tokens(i), comma_pos + 1, len(tokens(i))-(comma_pos-1))
+					end if
+					
+					polygons(Ubound(polygons)-1).first_point = _
+							add_point(@head, cast(single, x), cast(single,y))
+					
+				next i
+				'calculate again centroid and bound
+				polygons(Ubound(polygons)-1).centroid = _
+				calculate_centroid(polygons(Ubound(polygons)-1).first_point)
+				polygons(Ubound(polygons)-1).bounds = _
+				calculate_bounds (polygons(Ubound(polygons)-1).first_point, polygons(Ubound(polygons)-1).centroid) 
+					
+				
+			end if
+		Wend
+
+		Close #filenum
+	end if
 
 end sub
 
@@ -1285,7 +1322,7 @@ sub draw_bottom_info (	console_message as string, _
 						view_area as view_area_proto, _
 						user_mouse as mouse_proto, _
 						settings as settings_proto, _
-						timer_begin as single, _
+						timer_begin as double, _
 						on_screen_help() as string)
 						
 	'zoom
@@ -1293,24 +1330,25 @@ sub draw_bottom_info (	console_message as string, _
 	'tool used
 	draw_button (BTN_W, SCR_H - BTN_H, BTN_W * 2, BTN_H, console_message,true)
 	'bitmap show
-	draw_button (BTN_W*3, SCR_H - BTN_H, BTN_W, BTN_H, "BITMAP",	 settings.is_bitmap_visible)
+	draw_button (BTN_W*3, SCR_H - BTN_H, BTN_W, BTN_H, "[B]ITMAP",	 settings.is_bitmap_visible)
 	'wireframe show
-	draw_button (BTN_W*4, SCR_H - BTN_H, BTN_W, BTN_H, "WIREFRAME",	 settings.is_wireframe_visible)
+	draw_button (BTN_W*4, SCR_H - BTN_H, BTN_W, BTN_H, "[W]IREFRAME",	 settings.is_wireframe_visible)
 	'snap show
 	draw_button (BTN_W*5, SCR_H - BTN_H, BTN_W, BTN_H, "SNAP",	 settings.is_snap_active)
 	'centroid show
-	draw_button (BTN_W*6, SCR_H - BTN_H, BTN_W, BTN_H, "CENTROID",	 settings.is_centroid_visible)
+	draw_button (BTN_W*6, SCR_H - BTN_H, BTN_W, BTN_H, "[C]ENTROID",	 settings.is_centroid_visible)
 	'centroid show
-	draw_button (BTN_W*7, SCR_H - BTN_H, BTN_W, BTN_H, "POINTS",	 settings.is_vertex_visible)
+	draw_button (BTN_W*7, SCR_H - BTN_H, BTN_W, BTN_H, "[Q] POINTS",	 settings.is_vertex_visible)
 	'absolute x / y of mouse
 	draw_button (BTN_W*8, SCR_H - BTN_H, BTN_W*2, BTN_H, _
 				"x: " + str(user_mouse.abs_x) + ", y: " + str(user_mouse.abs_y),_
 				true)
 	'FPS
-	draw_button (BTN_W*10, SCR_H - BTN_H, BTN_W, BTN_H, _
-				"FPS: " + str(abs(int(1.0f/(timer_begin-timer)))),_
-				true)
+	dim fps as single = abs(int(1.0f/(timer_begin-timer)))
 	
+	draw_button (BTN_W*10, SCR_H - BTN_H, BTN_W, BTN_H, _
+				"FPS: " + str(fps),	true)
+				
 	'F1 - HELP infos
 	dim i as integer
 	
@@ -1323,4 +1361,71 @@ sub draw_bottom_info (	console_message as string, _
 			draw string (20, 20 + i * 12), on_screen_help(i), C_WHITE
 		next i
 	end if
+end sub
+
+
+sub load_icon_set ( 	bmp() as Ulong ptr, w as integer, _
+						h as integer, cols as integer, rows as integer, _
+						Byref bmp_path as string)
+				
+	dim as integer c, tiles, tile_w, tile_h, y, x
+	tiles = cols * rows
+	tile_w = w\cols
+	tile_h = h\rows
+	y = 0
+	x = 0
+	
+	BLOAD bmp_path, 0
+	
+	for c = 0 to Ubound(bmp)
+		if c > 0 and c mod cols = 0 then
+			y+= tile_h 
+			x = 0 
+		end if
+		bmp(c) = IMAGECREATE (tile_w, tile_h)
+		GET (x, y)-(x + tile_w - 1, y + tile_h - 1), bmp(c)
+		x += tile_w
+
+	next c
+
+end sub
+
+
+sub draw_mouse_pointer	(	x as integer, y as integer, _
+							lbtn_pressed as boolean, _
+							is_snap_point_available as boolean, _
+							input_mode as proto_input_mode, _
+							icon_set() as Ulong ptr)
+	dim icon as proto_icon
+	
+	select case input_mode
+		case input_add_point
+			if is_snap_point_available then
+				if lbtn_pressed then
+					icon = icon_pen_is_pressed
+				else
+					icon = icon_pen_snap
+				end if
+			else 
+				if lbtn_pressed then
+					icon = icon_pen_is_pressed
+				else
+					icon = icon_pen
+				end if
+			end if
+		case input_selection
+			icon = icon_direct_selection
+		case input_hand
+			if lbtn_pressed then
+				icon = icon_hand_is_pressed
+			else
+				icon = icon_hand
+			end if
+		case else
+			icon = icon_selection
+	
+	end select
+
+	put (x-12, y), icon_set(icon), trans
+	
 end sub
