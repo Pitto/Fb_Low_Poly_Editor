@@ -300,8 +300,52 @@ do
 			save_as_lpe_file(polygons(), "output.lpe")
 			input_mode = input_add_polygon
 			console_message = cm_FILE_SAVED
+		
+		'selects single nodes
+		case input_direct_selection
+			if user_mouse.is_lbtn_released then
 			
+				
+				user_mouse.bounding_x1 = user_mouse.drag_x1
+				user_mouse.bounding_y1 = user_mouse.drag_y1 
+				user_mouse.bounding_x2 = user_mouse.drag_x2
+				user_mouse.bounding_y2 = user_mouse.drag_y2
+				if user_mouse.bounding_x1 > user_mouse.bounding_x2 then
+					swap user_mouse.bounding_x1, user_mouse.bounding_x2
+				end if
+				if user_mouse.bounding_y1 > user_mouse.bounding_y2 then
+					swap user_mouse.bounding_y1, user_mouse.bounding_y2
+				end if
 			
+				unmark_all_nodes(polygons())
+				mark_selected_nodes (	user_mouse.bounding_x1, user_mouse.bounding_y1, _
+										user_mouse.bounding_x2, user_mouse.bounding_y2, _
+										polygons())
+				
+				view_area.refresh = true
+			end if
+			user_mouse.is_lbtn_released = false
+		
+		case input_move_node_up
+			move_selected_node(0, -KEYBOARD_PX_INCREMENTS, polygons())
+			view_area.refresh = true
+			input_mode = input_direct_selection
+			
+		case input_move_node_down
+			move_selected_node(0, +KEYBOARD_PX_INCREMENTS, polygons())
+			view_area.refresh = true
+			input_mode = input_direct_selection
+		
+		case input_move_node_left
+			move_selected_node(-KEYBOARD_PX_INCREMENTS, 0, polygons())
+			view_area.refresh = true
+			input_mode = input_direct_selection
+			
+		case input_move_node_right
+			move_selected_node(KEYBOARD_PX_INCREMENTS, 0, polygons())
+			view_area.refresh = true
+			input_mode = input_direct_selection
+		
 		case input_selection
 			if user_mouse.is_lbtn_released then
 				user_mouse.bounding_x1 = user_mouse.drag_x1
@@ -330,13 +374,23 @@ do
 			end if
 			user_mouse.is_lbtn_released = false
 			
-			case input_create_random_polygons
-			
-				create_random_polygons	(polygons(),RANDOM_POLYGONS_QTY, _
-										MAX_POLYGONS_NODES, SCR_W, _
-										SCR_H, view_area, wallp_img)
-				input_mode = input_add_polygon
-				view_area.refresh = true
+		case input_delete_node
+			for c = 0 to Ubound(polygons)-1
+				while count_selected_nodes (polygons(c).first_point )
+					polygons(c).first_point = delete_selected_node (polygons(c).first_point)
+				wend
+				polygons(c).centroid = calculate_centroid (polygons(c).first_point)
+			next c
+			input_mode = input_direct_selection
+			view_area.refresh = true
+		
+		case input_create_random_polygons
+		
+			create_random_polygons	(polygons(),RANDOM_POLYGONS_QTY, _
+									MAX_POLYGONS_NODES, SCR_W, _
+									SCR_H, view_area, wallp_img)
+			input_mode = input_add_polygon
+			view_area.refresh = true
 	end select
 	
 	timer_diff = timer - timer_begin
@@ -457,6 +511,12 @@ do
 			if (user_mouse.is_lbtn_pressed) then
 				line (user_mouse.x, user_mouse.y)-(user_mouse.old_x, user_mouse.old_y), C_ORANGE, B
 			end if
+			
+		case input_direct_selection
+		
+		if (user_mouse.is_lbtn_pressed) then
+			line (user_mouse.x, user_mouse.y)-(user_mouse.old_x, user_mouse.old_y), C_ORANGE, B
+		end if
 		
 
 	end select
@@ -465,12 +525,12 @@ do
 							user_mouse.is_lbtn_pressed, _
 							settings.is_snap_point_available, _
 							input_mode, icon_set())
-										
+							
 	draw_bottom_info 	(console_messages_strings(console_message), _
 						view_area, user_mouse, settings, timer_begin, _
 						on_screen_help())
-
-	
+						
+	workpage = 1 - Workpage ' Swap work pages.
 	workpage = 1 - Workpage ' Swap work pages.
 	screenunlock
 	sleep 20,1

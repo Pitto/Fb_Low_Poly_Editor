@@ -88,6 +88,13 @@ declare sub draw_mouse_pointer	(	x as integer, y as integer, _
 									is_snap_point_available as boolean, _
 									input_mode as proto_input_mode, _
 									icon_set() as Ulong ptr)
+declare sub mark_selected_nodes (	x1 as integer, y1 as integer, _
+									x2 as integer, y2 as integer, _
+									array() as polygon_proto)
+declare sub unmark_all_nodes (	array() as polygon_proto)
+declare sub move_selected_node(x_offset as integer, y_offset as integer, array() as polygon_proto)	
+declare function delete_selected_node (node as point_proto ptr) as point_proto ptr
+declare function count_selected_nodes (head as point_proto ptr) as integer
 
 '_______________________________________________________________________
 
@@ -100,6 +107,7 @@ function add_point(head as point_proto ptr ptr, x as single, y as single) as poi
     dim as point_proto ptr p = callocate(sizeof(point_proto))
     p->x = x
     p->y = y
+    p->is_selected = false
 	p->next_p = *head
     *head = p
     return p
@@ -476,8 +484,17 @@ Sub draw_vertices(head as point_proto ptr, ByVal c As ULong, view_area as view_a
   
 	while head <> NULL
 		if (head->next_p <> NULL) then
-			line	(head->x*view_area.zoom + view_area.x -2, _
-					head->y*view_area.zoom + view_area.y -2)-STEP(4,4),c, BF
+			'highlight the selected node
+			if head->is_selected then
+			circle	(head->x*view_area.zoom + view_area.x , _
+					head->y*view_area.zoom + view_area.y ), 3, C_BLUE,,,,F
+			
+			end if
+			
+			circle	(head->x*view_area.zoom + view_area.x , _
+					head->y*view_area.zoom + view_area.y), 2,C_WHITE,,,,F
+			
+
 		end if
 		head = head->next_p
 	wend
@@ -644,7 +661,11 @@ sub keyboard_listener(	input_mode as proto_input_mode ptr, _
 					reset_key_status(@key(i))
 				'delete all
 				case SC_DELETE
-					*input_mode = input_erase_polygon
+					if *input_mode = input_selection then
+						*input_mode = input_erase_polygon
+					elseif *input_mode = input_direct_selection then
+						*input_mode = input_delete_node
+					end if
 					view_area->refresh = true
 					reset_key_status(@key(i))
 				'show / hide vertices
@@ -674,6 +695,39 @@ sub keyboard_listener(	input_mode as proto_input_mode ptr, _
 						*input_mode = input_create_random_polygons
 					end if
 					reset_key_status(@key(i))
+				'direct selection
+				case SC_A
+					*input_mode = input_direct_selection
+					reset_key_status(@key(i))
+					
+				case SC_UP
+					'direct selection - node selected + UP key
+					if *input_mode = input_direct_selection then
+						*input_mode = input_move_node_up
+					end if
+					reset_key_status(@key(i))
+				
+				case SC_DOWN
+					'direct selection - node selected + DOWN key
+					if *input_mode = input_direct_selection then
+						*input_mode = input_move_node_down
+					end if
+					reset_key_status(@key(i))
+					
+				case SC_LEFT
+					'direct selection - node selected + LEFT key
+					if *input_mode = input_direct_selection then
+						*input_mode = input_move_node_left
+					end if
+					reset_key_status(@key(i))
+					
+				case SC_RIGHT
+					'direct selection - node selected + RIGHT key
+					if *input_mode = input_direct_selection then
+						*input_mode = input_move_node_right
+					end if
+					reset_key_status(@key(i))
+				
 			end select
 		
 			
@@ -717,6 +771,26 @@ Sub delete_all_points	(head as point_proto ptr)
 		head = temp->next_p
 		deallocate(temp)
 	wend
+end sub
+
+sub mark_selected_nodes (	x1 as integer, y1 as integer, _
+							x2 as integer, y2 as integer, _
+							array() as polygon_proto)	
+	dim i as integer
+	dim head as point_proto ptr
+		
+	for i = 0 to Ubound(array)-1
+			head = array(i).first_point
+			while head->next_p <> NULL
+				if 	head->x > x1 and  head->y > y1 and _
+					head->x < x2 and head->y < y2 then
+					
+					head->is_selected = true
+				end if
+				
+				head = head->next_p
+			wend
+	next i							
 end sub
 
 sub mouse_listener(user_mouse as mouse_proto ptr, view_area as view_area_proto ptr)
@@ -946,6 +1020,7 @@ sub reset_key_status (key as key_proto ptr)
 	key->is_down = false
 	key->old_is_down = false
 end sub
+
 
 Sub draw_wireframe(	head as point_proto ptr, ByVal c As ULong, _
 					view_area as view_area_proto, _
@@ -1429,3 +1504,81 @@ sub draw_mouse_pointer	(	x as integer, y as integer, _
 	put (x-12, y), icon_set(icon), trans
 	
 end sub
+
+sub unmark_all_nodes (array() as polygon_proto)
+
+	dim i as integer
+	dim head as point_proto ptr
+		
+	for i = 0 to Ubound(array)-1
+			head = array(i).first_point
+			while head->next_p <> NULL					
+				head->is_selected = false
+				head = head->next_p
+			wend
+	next i	
+
+end sub
+
+sub move_selected_node(x_offset as integer, y_offset as integer, array() as polygon_proto)	
+
+	dim i as integer
+	dim head as point_proto ptr
+
+		
+	for i = 0 to Ubound(array)-1
+		head = array(i).first_point
+		while head->next_p <> NULL
+			if 	head->is_selected then
+				head->x += x_offset
+				head->y += y_offset
+			
+			end if
+			head = head->next_p
+		'compute again the centroid of the modified polygon
+		array(i).centroid = calculate_centroid(array(i).first_point)
+		wend
+	next i	
+	
+
+end sub
+
+function delete_selected_node (node as point_proto ptr) as point_proto ptr
+
+	if (node = NULL) then ' Found the tail
+       return NULL
+	   
+	elseif (node->is_selected = true) then
+	   
+	   dim next_node as point_proto ptr
+		' Found one to delete
+		next_node = node->next_p
+		
+		deallocate(node)
+		
+		return next_node
+   else
+	 ' Just keep going
+		node->next_p = delete_selected_node(node->next_p)
+		return node
+	end if
+	
+end function
+
+function count_selected_nodes (head as point_proto ptr) as integer
+
+	dim i as integer
+	i = 0
+
+	while head <> NULL
+		if (head->next_p <> NULL) then
+			if head->is_selected then
+				i+=1
+			end if
+		end if
+		head = head->next_p
+	wend
+	
+	return i
+	
+end function

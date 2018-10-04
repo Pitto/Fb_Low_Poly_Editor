@@ -6,6 +6,12 @@ enum proto_input_mode
 	input_add_point = 2
 	input_close_polygon = 3
 	input_selection
+	input_direct_selection
+	input_move_node_up
+	input_move_node_down
+	input_move_node_left
+	input_move_node_right
+	input_delete_node
 	input_hand
 	add_vertex
 	del_vertex
@@ -44,10 +50,10 @@ enum proto_console_message
 end enum
 
 enum proto_icon
-	icon_selection = 0
-	icon_selection_over
-	icon_direct_selection
+	icon_direct_selection = 0
 	icon_direct_selection_over
+	icon_selection
+	icon_selection_over
 	icon_pen
 	icon_pen_is_pressed
 	icon_pen_snap

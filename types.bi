@@ -2,6 +2,7 @@
 type point_proto
 	x 			as single
 	y 			as single
+	is_selected		as boolean
 	next_p  	as point_proto ptr
 end type
 
