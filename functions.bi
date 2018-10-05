@@ -95,6 +95,7 @@ declare sub unmark_all_nodes (	array() as polygon_proto)
 declare sub move_selected_node(x_offset as integer, y_offset as integer, array() as polygon_proto)	
 declare function delete_selected_node (node as point_proto ptr) as point_proto ptr
 declare function count_selected_nodes (head as point_proto ptr) as integer
+declare sub get_selection_bounds (user_mouse as mouse_proto ptr)
 
 '_______________________________________________________________________
 
@@ -1582,3 +1583,18 @@ function count_selected_nodes (head as point_proto ptr) as integer
 	return i
 	
 end function
+
+sub get_selection_bounds (user_mouse as mouse_proto ptr)
+
+	user_mouse->bounding_x1 = user_mouse->drag_x1
+	user_mouse->bounding_y1 = user_mouse->drag_y1 
+	user_mouse->bounding_x2 = user_mouse->drag_x2
+	user_mouse->bounding_y2 = user_mouse->drag_y2
+	if user_mouse->bounding_x1 > user_mouse->bounding_x2 then
+		swap user_mouse->bounding_x1, user_mouse->bounding_x2
+	end if
+	if user_mouse->bounding_y1 > user_mouse->bounding_y2 then
+		swap user_mouse->bounding_y1, user_mouse->bounding_y2
+	end if
+
+end sub

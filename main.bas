@@ -304,18 +304,8 @@ do
 		'selects single nodes
 		case input_direct_selection
 			if user_mouse.is_lbtn_released then
-			
-				
-				user_mouse.bounding_x1 = user_mouse.drag_x1
-				user_mouse.bounding_y1 = user_mouse.drag_y1 
-				user_mouse.bounding_x2 = user_mouse.drag_x2
-				user_mouse.bounding_y2 = user_mouse.drag_y2
-				if user_mouse.bounding_x1 > user_mouse.bounding_x2 then
-					swap user_mouse.bounding_x1, user_mouse.bounding_x2
-				end if
-				if user_mouse.bounding_y1 > user_mouse.bounding_y2 then
-					swap user_mouse.bounding_y1, user_mouse.bounding_y2
-				end if
+							
+				get_selection_bounds(@user_mouse)
 			
 				unmark_all_nodes(polygons())
 				mark_selected_nodes (	user_mouse.bounding_x1, user_mouse.bounding_y1, _
@@ -348,16 +338,7 @@ do
 		
 		case input_selection
 			if user_mouse.is_lbtn_released then
-				user_mouse.bounding_x1 = user_mouse.drag_x1
-				user_mouse.bounding_y1 = user_mouse.drag_y1 
-				user_mouse.bounding_x2 = user_mouse.drag_x2
-				user_mouse.bounding_y2 = user_mouse.drag_y2
-				if user_mouse.bounding_x1 > user_mouse.bounding_x2 then
-					swap user_mouse.bounding_x1, user_mouse.bounding_x2
-				end if
-				if user_mouse.bounding_y1 > user_mouse.bounding_y2 then
-					swap user_mouse.bounding_y1, user_mouse.bounding_y2
-				end if
+				get_selection_bounds(@user_mouse)
 				for c = 0 to Ubound(polygons)-1
 					if 	polygons(c).centroid.x > user_mouse.bounding_x1 and _
 						polygons(c).centroid.y > user_mouse.bounding_y1 and _
@@ -514,11 +495,10 @@ do
 			
 		case input_direct_selection
 		
-		if (user_mouse.is_lbtn_pressed) then
-			line (user_mouse.x, user_mouse.y)-(user_mouse.old_x, user_mouse.old_y), C_ORANGE, B
-		end if
-		
-
+			if (user_mouse.is_lbtn_pressed) then
+				line (user_mouse.x, user_mouse.y)-(user_mouse.old_x, user_mouse.old_y), C_ORANGE, B
+			end if
+			
 	end select
 	
 	 draw_mouse_pointer	(	user_mouse.x, user_mouse.y,_

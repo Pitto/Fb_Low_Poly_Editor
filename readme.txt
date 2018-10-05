@@ -16,7 +16,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 Also add information on how to contact you by electronic and paper mail.
 
 0.10
-*	it's possible to select single nodes
+*	it's possible to select, move and delete single nodes
 
 
 0.09 
@@ -56,14 +56,14 @@ Also add information on how to contact you by electronic and paper mail.
 *   points show/hide
 
 0.04 
-find nearest point for snapping function optimized
+*   find nearest point for snapping function optimized
 
 0.03 
-Pan & Zoom
+*   Pan & Zoom
 
 0.02 
-Erase all polygons
-Save graphic as SVG
+*   Erase all polygons
+*   Save graphic as SVG
 
 0.01
-Close polygons
+*   Close polygons

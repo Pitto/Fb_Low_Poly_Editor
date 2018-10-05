@@ -1,34 +1,46 @@
 F1..........Show / Hide help
 
 DRAW TOOLS______________________________________________________________
-A...........Direct Sel. tool - click & drag to select multiple nodes
+
+A...........Direct Selection tool - click and drag to select multiple nodes
 V...........Selection tool - click and drag to select multiple polygons
 P...........Pen Tool
             left mouse click to add points, right click to
             automatically close path
-SPACE.......Hand Tool - while pressed it's possible to drag the artwork
-            using the mouse
+SPACE.......Hand Tool - while pressed it's possible to drag the artwork using the mouse
 LEFT SHIFT..while pressed disable snapping to point or line
+
 EDITING COMMANDS________________________________________________________
+
 CANC........Delete selected polygon/s or nodes
-VIEW COMMANDS___________________________________________________________
+
+VIEW COMMANDS
+
 Q...........Show / Hide Points
 W...........Show / Hide Wireframe
 C...........Show / Hide Centroids
 B...........Show / Hide background Bitmap
 X...........Show / Hide alpha Bitmap
+
 FILE COMMANDS___________________________________________________________
+
 S...........Save as .lpe file    <- WILL OVERWRITE EXISTING FILE
 E...........Exports as SVG file  <- WILL OVERWRITE EXISTING FILE
 CTRL + L....load .lpe file
+
 DEBUG COMMANDS__________________________________________________________
+
 D...........Show / Hide Polygon point's pointers Address
 CTRL + R....Fill artwork with random polygons
+
                       Special thanks to:
            D.J. Peters for his ImageScale function
     Mr Swiss for his code review of the scanline algorithm
+
            Stonemonkey, Muttonhead for their tips
+
 the fill polygon (using scanline algorithm) function is a translation of a c snippet by Angad...
-original source:
-http://code-heaven.blogspot.it/2009/10/simple-c-program-for-scan-line-polygon.html
-FB Low Poly Editor is created using FreeBasic language: www.freebasic.net
+original source: http://code-heaven.blogspot.it/2009/10/simple-c-program-for-scan-line-polygon.html
+
+      FB Low Poly Editor is created using FreeBasic language: www.freebasic.net
+      
