@@ -16,12 +16,15 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 Also add information on how to contact you by electronic and paper mail.
 
 0.10
-*	it's possible to select, move and delete single nodes
-
+*   it's possible to select, move and delete single nodes
+*   fixed a bug while the mouse pointer goes outside the program
+    window
+*   improved snapping routine, now it's possible to snap also
+	points placed over a yet existing line
 
 0.09 
 *   speed optimization: the artwok is rasterized only on some events
-    causing a lot of FPS gain
+    allowing a lot of FPS gain
 *   fixed a bug in load .lpe file, now also the bound are dinamically
     re-calculated
 *   Bottom bar info

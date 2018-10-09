@@ -11,8 +11,9 @@
 #define APP_NAME 				"Low Poly Editor by Pitto"
 #define APP_VERSION 			"Version 0.10"
 #define SCR_W 					1024		
-#define SCR_H 					768
+#define SCR_H 					600
 #define MIN_SNAP_DIST			15
+#define MIN_SNAP_TO_SNAP_DIST	5
 #define MIN_EDGE_SNAP_DIST		20
 #define RANDOM_POLYGONS_QTY		200
 #define MAX_POLYGONS_NODES		10

@@ -156,7 +156,16 @@ do
 								
 	keyboard_listener	(	@input_mode, user_mouse, @view_area,_
 							@settings, key())
-	mouse_listener		(@user_mouse, @view_area)
+	
+	'this to avoid unwanted clicks while mouse pointer goes outside the
+	'working window
+	if (User_Mouse.res = 0) then
+		mouse_listener		(@user_mouse, @view_area)
+	else
+		user_mouse.x = user_mouse.old_x
+		user_mouse.y = user_mouse.old_y
+	end if
+	'-------------------------------------------------------------------
 	
 	nearest_point = find_nearest_point(polygons(), user_mouse, view_area)
 	dist_from_nearest_point = int (dist		(nearest_point.x,_
@@ -511,7 +520,7 @@ do
 						on_screen_help())
 						
 	workpage = 1 - Workpage ' Swap work pages.
-	workpage = 1 - Workpage ' Swap work pages.
+	
 	screenunlock
 	sleep 20,1
 	

@@ -217,6 +217,7 @@ function find_nearest_point (array() as polygon_proto, user_mouse as mouse_proto
 	'store all segments of all polygons in an array
 	'and find the distance of line to pointer for each
 	redim preserve segments(0 to 0) as segment_proto
+	redim preserve points(0 to 0) 	as temp_point_proto
 	dim close_point as point_proto
 
 	for j = 0 to Ubound(array) - 1
@@ -233,6 +234,10 @@ function find_nearest_point (array() as polygon_proto, user_mouse as mouse_proto
 
 			segments(i).x1 = head->x
 			segments(i).y1 = head->y
+			
+			points(i).x = head->x
+			points(i).y = head->y
+			redim preserve points(0 to (Ubound(points)+1))
 
 			if (head->next_p->next_p <> NULL) then
 				segments(i).x2 = head->next_p->x
@@ -261,13 +266,26 @@ function find_nearest_point (array() as polygon_proto, user_mouse as mouse_proto
 								segments(i).y2, _
 								view_area)
 	next i
-	
+
 	quicksort (nearest_points(), Lbound(nearest_points), Ubound(nearest_points))
 	
-	if UBound(nearest_points) > 0 then
-		return nearest_points(1)
-	else
-		return nearest_points(0)
+	for i = 0 to Ubound(points)-1
+		points(i).distance = dist(points(i).x, points(i).y, user_mouse.abs_x, user_mouse.abs_y)
+	next i
+	
+	quicksort (points(), Lbound(points), Ubound(points))
+	
+	
+	if UBound(points) > 0 then
+		if (points(1).distance < MIN_SNAP_TO_SNAP_DIST) then
+			return points(1)
+		else
+			if UBound(nearest_points) > 0 then
+				return nearest_points(1)
+			else
+				return nearest_points(0)
+			end if
+		end if
 	end if
 
 end function
@@ -1386,7 +1404,7 @@ sub draw_button (x as integer, y as integer, w as integer,_
 	Line (x,y)-(x+w,y+h),C_WHITE,B
 	
 	if (is_selected) then
-		Line (x,y)-(x+w,y+h),C_DARK_GRAY,BF
+		Line (x,y)-(x+w,y+h),C_DARK_RED,BF
 		Line (x,y)-(x+w,y+h),C_GRAY,B
 	end if
 	
@@ -1407,6 +1425,8 @@ sub draw_bottom_info (	console_message as string, _
 	draw_button (BTN_W, SCR_H - BTN_H, BTN_W * 2, BTN_H, console_message,true)
 	'bitmap show
 	draw_button (BTN_W*3, SCR_H - BTN_H, BTN_W, BTN_H, "[B]ITMAP",	 settings.is_bitmap_visible)
+	'bitmap show
+	draw_button (BTN_W*3, SCR_H - BTN_H*2, BTN_W, BTN_H, "[X] ALPHA",	 settings.is_alpha_bitmap_visible)
 	'wireframe show
 	draw_button (BTN_W*4, SCR_H - BTN_H, BTN_W, BTN_H, "[W]IREFRAME",	 settings.is_wireframe_visible)
 	'snap show
